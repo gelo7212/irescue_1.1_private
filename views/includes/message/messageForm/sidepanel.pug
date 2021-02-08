@@ -1,0 +1,116 @@
+#sidepanel
+    #profile
+        .wrap
+            img#profile-img.online(src='http://emilcarlsson.se/assets/mikeross.png', alt='')
+            p #{Account_NAME}
+            i.fa.fa-chevron-down.expand-button(aria-hidden='true')
+            #status-options
+                ul
+                    li#status-online.active
+                        span.status-circle
+                        p Online
+                    li#status-away
+                        span.status-circle
+                        p Away
+                    li#status-busy
+                        span.status-circle
+                        p Busy
+                    li#status-offline
+                        span.status-circle
+                        p Offline
+            #expanded
+                label(for='twitter')
+                    i.fa.fa-google.fa-fw(aria-hidden='true')
+                input(name='twitter', type='text', value=Account_EMAIL)
+                label(for='twitter')
+                    i.fa.fa-twitter.fa-fw(aria-hidden='true')
+                input(name='twitter', type='text', value='ross81')
+                label(for='twitter')
+                    i.fa.fa-instagram.fa-fw(aria-hidden='true')
+                input(name='twitter', type='text', value='mike.ross')
+    #search
+        label(for='')
+            i.fa.fa-search(aria-hidden='true')
+        input(type='text', placeholder='Search contacts...')
+    #contacts
+        ul
+            li.contact
+                .wrap
+                    span.contact-status.online
+                    img(src='http://emilcarlsson.se/assets/louislitt.png', alt='')
+                    .meta
+                        p.name Louis Litt
+                        p.preview You just got LITT up, Mike.
+            li.contact.active
+                .wrap
+                    span.contact-status.busy
+                    img(src='http://emilcarlsson.se/assets/harveyspecter.png', alt='')
+                    .meta
+                        p.name Harvey Specter
+                        p.preview
+                            | Wrong. You take the gun, or you pull out a bigger one. Or, you call their bluff. Or, you do any one of a hundred and forty six other things.
+            li.contact
+                .wrap
+                    span.contact-status.away
+                    img(src='http://emilcarlsson.se/assets/rachelzane.png', alt='')
+                    .meta
+                        p.name Rachel Zane
+                        p.preview I was thinking that we could have chicken tonight, sounds good?
+            li.contact
+                .wrap
+                    span.contact-status.online
+                    img(src='http://emilcarlsson.se/assets/donnapaulsen.png', alt='')
+                    .meta
+                        p.name Donna Paulsen
+                        p.preview Mike, I know everything! I'm Donna..
+            li.contact
+                .wrap
+                    span.contact-status.busy
+                    img(src='http://emilcarlsson.se/assets/jessicapearson.png', alt='')
+                    .meta
+                        p.name Jessica Pearson
+                        p.preview Have you finished the draft on the Hinsenburg deal?
+            li.contact
+                .wrap
+                    span.contact-status
+                    img(src='http://emilcarlsson.se/assets/haroldgunderson.png', alt='')
+                    .meta
+                        p.name Harold Gunderson
+                        p.preview Thanks Mike! :)
+            li.contact
+                .wrap
+                    span.contact-status
+                    img(src='http://emilcarlsson.se/assets/danielhardman.png', alt='')
+                    .meta
+                        p.name Daniel Hardman
+                        p.preview We'll meet again, Mike. Tell Jessica I said 'Hi'.
+            li.contact
+                .wrap
+                    span.contact-status.busy
+                    img(src='http://emilcarlsson.se/assets/katrinabennett.png', alt='')
+                    .meta
+                        p.name Katrina Bennett
+                        p.preview I've sent you the files for the Garrett trial.
+            li.contact
+                .wrap
+                    span.contact-status
+                    img(src='http://emilcarlsson.se/assets/charlesforstman.png', alt='')
+                    .meta
+                        p.name Charles Forstman
+                        p.preview Mike, this isn't over.
+            li.contact
+                .wrap
+                    span.contact-status
+                    img(src='http://emilcarlsson.se/assets/jonathansidwell.png', alt='')
+                    .meta
+                        p.name Jonathan Sidwell
+                        p.preview
+                            span You:
+                            |  That's bullshit. This deal is solid.
+    #bottom-bar
+        button#addcontact
+            i.fa.fa-user-plus.fa-fw(aria-hidden='true')
+            span Add contact
+        button#settings
+            i.fa.fa-cog.fa-fw(aria-hidden='true')
+            span Settings

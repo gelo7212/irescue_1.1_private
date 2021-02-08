@@ -1,0 +1,68 @@
+script(src='bower_components/jquery/dist/jquery.js')
+script(src='/socket.io/socket.io.js')
+script(src='/javascripts/Cookie.js')
+script(src='/javascripts/base/base.js')
+script(src='https://maps.googleapis.com/maps/api/js?key=AIzaSyBmoOwz2iwYxal6g08NaIT8QbPj_V5pTPM', async, defer)
+script(src='https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.9.0/feather.min.js')
+script(src='bower_components/chart.js/dist/Chart.min.js')
+script(src='/javascripts/base/nav.js')
+link(href='stylesheets/main.css', rel='stylesheet')
+link(rel='stylesheet', href='bower_components/bootstrap/dist/css/bootstrap.min.css', integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T", crossorigin="anonymous")
+link(rel='stylesheet', href='stylesheets/style.css')
+link(rel='stylesheet', href='https://blackrockdigital.github.io/startbootstrap-sb-admin-2/vendor/fontawesome-free/css/all.min.css')
+
+style.
+    .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+    @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+            font-size: 3.5rem;
+        }
+    }
+    #admin-con > .nav-item > .media {
+        padding-top: 2px!important;
+        padding-bottom: 1px!important;
+    }
+    #admin-con > .nav-item > .pt-3 > .pb-3{
+        padding-bottom: 2!important;
+    }
+// Custom styles for this template
+
+include ./../Nav/nav_top
+.container-fluid
+    .row
+        include ./../Nav/nav_side
+        script.
+            SANS('#{route}')
+            
+        main.col-md-10.ml-sm-auto.col-lg-10.px-4(role='main')
+        
+            if route =='DASHBOARD' 
+                include ./../dashboard/dashboard
+            else if route =='MAP'
+                include ./../base/baseMap
+            else if route == 'POST'
+                include ./../post/basePost
+            else if route =='ACCOUNT'
+                include ./../account/account
+            else if route =='PROFILE'
+                include ./../account/account
+            else if route =='TRACKER'
+                include ./../account/account
+            else if route =='REPORT'
+                include ./../account/account
+        #frame_
+        #exampleModalCenter.modal.fade(tabindex='-1', role='dialog', aria-labelledby='exampleModalCenterTitle', aria-hidden='true')
+            .modal-dialog.modal-dialog-centered(role='document')
+                .modal-content
+        #fullscreenViewModal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='fullscreenViewModalTitle', aria-hidden='true')
+            .modal-dialog.modal-dialog-centered(role='document')
+                .modal-content
+
+script(src='bower_components/bootstrap/dist/js/bootstrap.bundle.min.js')

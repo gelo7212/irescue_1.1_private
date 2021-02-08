@@ -1,0 +1,91 @@
+nav.navbar.navbar-dark.fixed-top.bg-dark.flex-md-nowrap.p-0.shadow
+    a.navbar-brand.col-sm-3.col-md-2.mr-0(href='#') I-Rescue
+    input.form-control.form-control-dark.w-100(type='text', placeholder='Search', aria-label='Search')
+    ul.navbar-nav.px-3.ml-auto
+        // Nav Item - Alerts
+        li.nav-item.dropdown.no-arrow.mx-1
+            a#alertsDropdown.nav-link.dropdown-toggle(href='#', role='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
+                i.fas.fa-bell.fa-fw
+                // Counter - Alerts
+                span.badge.badge-danger.badge-counter 3+
+                // Dropdown - Alerts
+            .dropdown-list.dropdown-menu.dropdown-menu-right.shadow.animated--grow-in(aria-labelledby='alertsDropdown')
+                h6.dropdown-header
+                    | Alerts Center
+                a.dropdown-item.d-flex.align-items-center(href='#')
+                    .mr-3
+                        .icon-circle.bg-primary
+                            i.fas.fa-file-alt.text-white
+                    div
+                        .small.text-gray-500 December 12, 2019
+                        span.font-weight-bold A new monthly report is ready to download!
+                a.dropdown-item.d-flex.align-items-center(href='#')
+                    .mr-3
+                        .icon-circle.bg-success
+                            i.fas.fa-donate.text-white
+                    div
+                        .small.text-gray-500 December 7, 2019
+                        |                     $290.29 has been deposited into your account!
+                a.dropdown-item.d-flex.align-items-center(href='#')
+                    .mr-3
+                        .icon-circle.bg-warning
+                            i.fas.fa-exclamation-triangle.text-white
+                    div
+                        .small.text-gray-500 December 2, 2019
+                        |                     Spending Alert: We've noticed unusually high spending for your account.
+                a.dropdown-item.text-center.small.text-gray-500(href='#') Show All Alerts
+        // Nav Item - Messages
+        li.nav-item.dropdown.no-arrow.mx-1.message_thread
+            a#messagesDropdown.nav-link.dropdown-toggle(href='#', role='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
+                i.fas.fa-envelope.fa-fw
+                // Counter - Messages
+                span.badge.badge-danger.badge-counter 7
+                // Dropdown - Messages
+            .dropdown-list.dropdown-menu.dropdown-menu-right.shadow.animated--grow-in(aria-labelledby='messagesDropdown')
+                h6.dropdown-header
+                    | Message Center
+                a.dropdown-item.d-flex.align-items-center(href='#')
+                    .dropdown-list-image.mr-3
+                        img.rounded-circle(src='https://source.unsplash.com/fn_BT9fwg_E/60x60', alt='')
+                        .status-indicator.bg-success
+                    .font-weight-bold
+                        .text-truncate Hi there! I am wondering if you can help me with a problem I've been having.
+                        .small.text-gray-500 Emily Fowler · 58m
+                
+                a.dropdown-item.text-center.small.text-gray-500(href='/message') Read More Messages
+        .topbar-divider.d-none.d-sm-block
+        // Nav Item - User Information
+        li.nav-item.dropdown.no-arrow
+            a#userDropdown.nav-link.dropdown-toggle(href='#', role='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
+                span.mr-2.d-none.d-lg-inline.text-gray-600.small #{Account_USERNAME}
+            // Dropdown - User Information
+            .dropdown-menu.dropdown-menu-right.shadow.animated--grow-in(aria-labelledby='userDropdown')
+                a.dropdown-item(href='#')
+                    i.fas.fa-user.fa-sm.fa-fw.mr-2.text-gray-400
+                    |                   Profile
+                a.dropdown-item(href='#')
+                    i.fas.fa-cogs.fa-sm.fa-fw.mr-2.text-gray-400
+                    |                   Settings
+                a.dropdown-item(href='#')
+                    i.fas.fa-list.fa-sm.fa-fw.mr-2.text-gray-400
+                    |                   Activity Log
+                .dropdown-divider
+                a.dropdown-item(href='#', data-toggle='modal', data-target='#logoutModal')
+                    i.fas.fa-sign-out-alt.fa-sm.fa-fw.mr-2.text-gray-400
+                    |                   Logout
+        script.
+            (function(){
+                $('li').find('.dropdown-menu').find("a:contains('Logout')").click(function(){
+                    $.ajax({
+                            type: 'POST',
+                            url: '/auth/logout',
+                            success: function(data) {
+                                 console.log(data)
+                                 location.reload()
+                            },
+                            error: function() {
+                                  console.log(false)
+                            }
+                        });
+                })
+            })()

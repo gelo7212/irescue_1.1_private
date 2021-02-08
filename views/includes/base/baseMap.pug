@@ -1,0 +1,18 @@
+link(href='stylesheets/map.css', rel='stylesheet')
+.container-fluid
+    .row
+        .col-lg-6.mb-4(style="min-height: 30pc;")
+            include ./../Nav/user_rep_nav
+            include ./../Maps/user_report/user_report_map
+        .col-lg-6.mb-4(style="min-height: 30pc;")
+            include ./../Nav/tracker_nav
+            include ./../Maps/tracker_report/tracker_map
+    .row 
+        .col-lg-6.mb-4(style="min-height: 30pc;")
+            include ./../Nav/responder_nav
+            include ./../Maps/responder/responder_map
+        .col-lg-6.mb-4(style="min-height: 30pc;")
+            include ./../Nav/map_nav
+            include ./../evacuation/evacuation
+
+script(src='javascripts/map.js')

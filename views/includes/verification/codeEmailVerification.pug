@@ -1,0 +1,93 @@
+
+html(lang='en')
+  head
+    meta(charset='utf-8')
+    meta(name='viewport', content='width=device-width, initial-scale=1, shrink-to-fit=no')
+    meta(name='description', content='')
+    if _verify == true
+        link(rel='stylesheet', href='../../../../bower_components/bootstrap/dist/css/bootstrap.css')
+        script(src='../../../../bower_components/jquery/dist/jquery.js')
+    else
+        link(rel='stylesheet', href='../../bower_components/bootstrap/dist/css/bootstrap.css')
+        script(src='../../bower_components/jquery/dist/jquery.js')
+    style.
+      .bd-placeholder-img {
+      font-size: 1.125rem;
+      text-anchor: middle;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      }
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;  
+        }
+      }
+    // Custom styles for this template
+    if _verify == true
+        link(href='../../../../stylesheets/login.css', rel='stylesheet')
+        script(src='../../../../javascripts/passwordValidation.js')
+    else
+        link(href='../../stylesheets/login.css', rel='stylesheet')
+        script(src='../../javascripts/passwordValidation.js')
+        
+    body.text-center.justify-content-center
+        .card
+            .card-header
+                |  Setup Administrator Account
+            .card-body                
+                if _verify == true
+                    if mess != false
+                        .alert.alert-success(role='alert')
+                            | Your account was successfully created .
+                        .card.text-left(style="margin-bottom: 1pc;")
+                            .card-body
+                                h5.card-title.text-center Account Info
+                                h6.card-subtitle.mb-2.text-muted Email : #{mess.Account_EMAIL}
+                                p.card-subtitle.mb-2.text-muted  Fullname : #{mess.Account_NAME}
+                                p.card-subtitle.mb-2.text-muted  Username : #{mess.Account_USERNAME}
+                        form.form-signin(action='/Administrator' ,method='GET',style='max-width:47pc')
+                            button.btn.btn-primary.btn-sm(style="margin-bottom: 0.5pc;") Sign in
+                    else
+                        .alert.alert-info(role='alert')
+                            | Your registration will expire after 1 hour. #{_verify} 
+                        script(src='../../../../javascripts/passwordValidation.js')
+                        form.form-signin(action='/Administrator/setup/'+token+'/register/' ,method='POST',style='max-width:47pc')
+                            .form-group.has-feedback
+                                label.sr-only(for='inputPassword') Password
+                                input#NewPassword.form-control(type='password', placeholder='Password', required='',name='password')
+                                span.glyphicon.glyphicon-lock.form-control-feedback
+                            label.sr-only(for='inputPassword') Verify Password 
+                            input#VerifyPassword.form-control(type='password', placeholder='Verify Password', required='')                    
+                            button.btn.btn-lg.btn-primary.btn-block Save
+                        
+                        script(src='../../../../bower_components/bootstrap/dist/js/bootstrap.js')
+                        script(src='../../../../bower_components/bootstrap/dist/js/bootstrap.bundle.js')
+                else  
+                    .alert.alert-info(role='alert')
+                        | Your registration will expire after 1 hour. #{_verify}               
+                    .card.text-left(style="margin-bottom: 1pc;")
+                        .card-body
+                            h5.card-title.text-center Account Info
+                            h6.card-subtitle.mb-2.text-muted Email : #{email}
+                            p.card-subtitle.mb-2.text-muted  Fullname : #{name}
+                            p.card-subtitle.mb-2.text-muted  Username : #{username}
+                    .code_container
+                        form.form-signin(action='/Administrator/setup/'+token+'/verify/' method='POST' style='max-width:47pc')
+                            .input-group.input-group-sm.mb-3
+                                .input-group-prepend
+                                    span.input-group-text#inputGroup-sizing-sm CODE
+                                input.form-control#1st(type='text',required='', aria-label='1st',maxlength = '3',minlength = '3', pattern=".{3,3}",name = 'first' )
+                                .input-group-append
+                                    span.input-group-text -
+                                input.form-control#2nd(type='text',required='', aria-label='2nd',maxlength='3',minlength = '3', pattern=".{3,3}",name = 'second')
+                                .input-group-append
+                                    span.input-group-text -
+                                input.form-control#3rd(type='text',required='', aria-label='3rd)',maxlength='4',minlength = '3', pattern=".{4,4}" name='third')
+                            button.btn.btn-primary.btn-sm(type='button',style="margin-bottom: 0.5pc;margin-right:0.5pc") Resend Code
+                            button#save.btn.btn-primary.btn-sm(type='submit ',style="margin-bottom: 0.5pc;") Verify Email
+                       
+                    p.mt-5.mb-3.text-muted © 2017-2019
+                    script(src='../../bower_components/bootstrap/dist/js/bootstrap.js')
+                    script(src='../../bower_components/bootstrap/dist/js/bootstrap.bundle.js')

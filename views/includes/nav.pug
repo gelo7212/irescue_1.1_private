@@ -1,0 +1,27 @@
+nav.navbar.navbar-expand-lg.navbar-light.bg-light
+        a.navbar-brand(href='#') I-Rescue
+        button.navbar-toggler(type='button', data-toggle='collapse', data-target='#navbarNavDropdown', aria-controls='navbarNavDropdown', aria-expanded='false', aria-label='Toggle navigation')
+          span.navbar-toggler-icon
+        #navbarNavDropdown.collapse.navbar-collapse
+          ul.navbar-nav
+            li.nav-item.active
+              a.nav-link(href='#')
+                | Home 
+                span.sr-only (current)
+            li.nav-item
+              a.nav-link(href='#') Evacuation Center
+            li.nav-item
+              a.nav-link(href='#') Ready Kit
+            li.nav-item.dropdown
+              a#navbarDropdownMenuLink.nav-link.dropdown-toggle(href='#', role='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
+                | Reports
+              .dropdown-menu(aria-labelledby='navbarDropdownMenuLink' )
+                a.dropdown-item(href='#')   User Tracker
+                a.dropdown-item(href='#')   User Emergency Messages
+                a.dropdown-item(href='#') 
+            li.nav-item.dropdown
+              a#navbarDropdownMenuLink.nav-link.dropdown-toggle(href='#', role='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
+                | Accounts
+              .dropdown-menu(aria-labelledby='navbarDropdownMenuLink')
+                a.dropdown-item(href='#') Clients
+                a.dropdown-item(href='#') Administrator Accounts

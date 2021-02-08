@@ -1,0 +1,358 @@
+
+
+.container-fluid
+    
+    .row
+        .col-md-10.col-lg-10.px-4
+            .d-flex.justify-content-between.flex-wrap.flex-md-nowrap.align-items-center.pt-3.pb-2.mb-3.border-bottom
+                h1.h2 News Feed
+            .col.border-right
+                h4 New post
+                .p-c
+                script.
+                    $.post('/post/post-box',function(data){
+                        $('.p-c').html(data)
+                    })
+            .news_row
+
+        .qas.ml-sm-auto
+style.
+    .noscroll{
+        overflow: hidden!important;
+    }
+    .NewsHeading{
+        opacity: 0.8;
+        background-color: #000;
+        bottom: 0;
+        position: absolute;
+        width: 100%;
+        padding-left: 12px;
+        padding: 10px;
+    }
+    .NewsHeading p {
+        font-size: small;
+        margin: 0.2;
+        margin-bottom: 10px;
+        white-space: nowrap;
+        overflow: hidden !important;
+        text-overflow: ellipsis;
+    }
+    .news_row{
+        display: flex;
+        flex-wrap: wrap;
+        padding: 0 4px;
+    }
+    .column:first-child {
+    flex: 50%;
+    max-width: 50%;
+    padding: 0 4px;
+    } 
+    .column:first-child .box {
+        margin-top: 8px;
+        vertical-align: middle;
+        width: 100%;
+        background-color:  rgb(240, 237, 237);
+        height: 400px;
+        position: relative;
+    }
+    .column:nth-child(2) {
+        flex: 100%;
+        max-width: 50%;
+        padding: 0 4px;
+    } 
+    .column:nth-child(2) .box {
+        margin-top: 8px;
+        vertical-align: middle;
+        width: 100%;
+        background-color: rgb(240, 237, 237);
+        height: 196px;
+        position: relative;
+    }
+    .column {
+        flex: 25%;
+        max-width: 25%;
+        padding: 0 4px;
+    } 
+    .column .box {
+        margin-top: 8px;
+        vertical-align: middle;
+        width: 100%;
+        background-color: rgb(240, 237, 237);
+        height: 200px;
+        position: relative;
+    }
+     .box:hover {
+        -webkit-filter: contrast(130%);filter: contrast(130%);
+    }
+    .box > img {
+        object-fit: contain;
+        width:inherit;
+        height: -webkit-fill-available;
+        position: absolute;
+    }
+    .box > video {
+        object-fit: contain;
+        width:inherit;
+        height: -webkit-fill-available;
+        position: absolute;
+    }
+    .carousel-item {
+        text-align: -webkit-center;
+    }
+    .carousel-inner > .carousel-item > img {
+        object-fit: contain;
+        width: 640px;
+        height: 76vh;
+        position: relative;
+    }
+    .carousel-inner > .carousel-item > video {
+        object-fit: contain;
+        width: 640px;
+        height: 76vh;
+        position: relative;
+    }
+    .carousel {
+        background: black;
+    }
+    .locations{
+        -moz-column-count: 3;
+        -moz-column-gap: 20px;
+        -webkit-column-count: 3;
+        -webkit-column-gap: 20px;
+        column-count: 3;
+        column-gap: 20px;
+    }
+    .orange{
+        background-color: orange!important;
+    }
+script.
+    (function(){
+        let nodata = false
+        
+        function post_by_ID(_ID){
+           new Promise((resolve,reject)=>{
+                $.ajax({
+                    type: 'POST',
+                    url: '/post/w/'+_ID,
+                    data:{id:_ID},
+                    success: function(data) {
+                        $('body').append(data)
+                    },
+                    error: function(e) {
+                        console.log(e)
+                    }
+                });
+            }).catch(err=>{
+                console.log(err)
+            })
+        }
+        $('body').on('click','.close_news',function(w){
+            new Promise((resolve,reject)=>{
+                $('body').removeClass('noscroll')
+                $('.news_modal').remove()
+                $('html, body').animate({
+                    scrollTop: $('#'+$(this).attr('id')).offset().top - 80
+                }, 50);
+                $(window).scroll(function() {
+                    let $this = $(this)
+                    console.log($this.scrollTop() , $this.height(),$('main').height())
+                    if(($this.scrollTop() + $this.height()) >= $('main').height()) {
+                        prepend($this)
+                    }
+                });
+            })
+            
+        })
+        $('.news_row').on('click',' .box',function(w){
+            new Promise((resolve,reject)=>{
+                console.log($(this).attr('id'))
+                $(window).off('scroll')
+                $('body').addClass('noscroll')
+                $('.news_modal').remove()
+                post_by_ID($(this).attr('id'))
+            })
+            
+        })
+        $(window).scroll(function() {
+            let $this = $(this)
+            
+            if(($this.scrollTop() + $this.height()) >= $('main').height()) {
+                console.log($this.scrollTop() , $this.height(),$('main').height())
+                prepend($this)
+            }
+        });
+        function more(offset,keyword,sort){
+            return new Promise((resolve,reject)=>{
+                $.ajax({
+                    type: 'POST',
+                    url: '/post/a',
+                    data:{'offset':offset,'keyword':keyword, 'sort':sort},
+                    success: function(data) {
+                        return resolve(data)
+                    },
+                    error: function() {
+                        return reject(false)
+                    }
+                });
+            }).catch(err=>{
+                console.log(err)
+            })
+        }
+        var i= 0
+        function prepend($this){
+            new Promise((resolve,reject)=>{
+                var $results = $(".news_row");
+                if (!$results.data("loading")) {
+                    $(".news_row").after($("<p class='loading'>Loading...</p>").fadeIn('slow')).data("loading", true);
+                    let id = $results.find('.column').last().find('.box').last().data('num')
+                    if(typeof id =='undefined'){
+                        id = 0}
+                        else{
+                            id = id+1
+                        }
+                        console.log(id)
+                    if(!nodata){
+                        
+                        more(id,'','newest').then(d=>{
+                            
+                            if(d){
+                                if(d.length == 0)
+                                {
+                                    nodata = true
+                                    $(".news_row").after($("<p class='loading'>Loading...</p>").fadeIn('slow')).data("loading", true);
+                                        $(".loading").fadeOut('fast', function() {
+                                            $(this).remove();
+                                        });
+                                }else{
+                                    console.log(d)
+                                    $(".loading").fadeOut('fast', function() {
+                                        $(this).remove();
+                                    });
+                                    var html = ''
+                                    d.forEach(function(element){
+                                        if($results.find('#'+element.ID).length==0){
+                                            let noFile = {
+                                                FILENAME:'images/no-image-icon-8.jpg',
+                                                FILETYPE:'image/jpg'
+                                            }
+                                            let link = element.link
+                                            let FILENAME =''
+                                            let FILETYPE =''
+                                            if( link == null){
+                                                FILENAME = noFile.FILENAME
+                                                FILETYPE = noFile.FILETYPE
+                                            }else{
+                                                FILENAME = 'uploads/post_images/'+link[0].FILENAME
+                                                FILETYPE = link[0].FILETYPE
+                                            }
+                                            if(id == 0){
+                                                
+                                            if(FILETYPE == 'video/mp4'){
+                                                html = 
+                                            '<div class="box" id ="'+element.ID+'" data-num="'+id+'" style="width:100%;">'+
+                                                '<img src ="'+FILENAME+'">'+
+                                                '<div class="NewsHeading">'+
+                                                '<p style="font-weight: bold;color:white;">'+element.POST_TYPE +'<br /><span style="font-weight: 100;color:white;">'+element.BODY+'</span></p>'+
+                                                '</div>'+
+                                            '</div>'
+                                            }else{
+                                                html = 
+                                            '<div class="box" id ="'+element.ID+'" data-num="'+id+'" style="width:100%;">'+
+                                                '<img src ="'+FILENAME+'">'+
+                                                '<div class="NewsHeading">'+
+                                                '<p style="font-weight: bold;color:white;">'+element.POST_TYPE +'<br /><span style="font-weight: 100;color:white;">'+element.BODY+'</span></p>'+
+                                                '</div>'+
+                                            '</div>'
+                                            }
+                                             $results.append('<div class="column">'+html+'</div>');
+                                            }
+                                            else if(id == 1 ||id == 2 ){
+                                                  if(id == 1){
+                                                     
+                                                        if(FILETYPE == 'video/mp4'){
+                                                             html = 
+                                                            '<div class="box" id ="'+element.ID+'" data-num="'+id+'" style="width:100%;">'+
+                                                            '<img src ="'+FILENAME+'">'+
+                                                                '<div class="NewsHeading">'+ 
+                                                                '<p style="font-weight: bold;color:white;">'+element.POST_TYPE +'<br /><span style="font-weight: 100;color:white;">'+element.BODY+'</span></p>'+
+                                                                '</div>'+
+                                                            '</div>'
+                                                        }else{
+                                                            html = 
+                                                            '<div class="box" id ="'+element.ID+'" data-num="'+id+'" style="width:100%;">'+
+                                                                '<video width="320" height="240" >'+
+                                                                    '<source src="'+FILENAME+'" type="video/mp4">'+
+                                                                    'Your browser does not support the video tag.'+
+                                                                '</video>'+
+                                                                '<div class="NewsHeading">'+
+                                                                '<p style="font-weight: bold;color:white;">'+element.POST_TYPE +'<br /><span style="font-weight: 100;color:white;">'+element.BODY+'</span></p>'+
+                                                                '</div>'+
+                                                            '</div>'
+                                                        }
+                                                  }else{
+                                                   
+                                                    if(FILETYPE == 'video/mp4'){
+                                                         html = html + 
+                                            '<div class="box" id ="'+element.ID+'" data-num="'+id+'" style="width:100%;">'+
+                                                '<video width="320" height="240" >'+
+                                                    '<source src="'+FILENAME+'" type="video/mp4">'+
+                                                    'Your browser does not support the video tag.'+
+                                                    '</video>'+
+                                                '<div class="NewsHeading">'+
+                                                '<p style="font-weight: bold;color:white;">'+element.POST_TYPE +'<br /><span style="font-weight: 100;color:white;">'+element.BODY+'</span></p>'+
+                                                '</div>'+
+                                            '</div>'
+                                                    }else{
+                                                         html = html + 
+                                            '<div class="box" id ="'+element.ID+'" data-num="'+id+'" style="width:100%;">'+
+                                               '<img src ="'+FILENAME+'">'+
+                                                '<div class="NewsHeading">'+
+                                                '<p style="font-weight: bold;color:white;">'+element.POST_TYPE +'<br /><span style="font-weight: 100;color:white;">'+element.BODY+'</span></p>'+
+                                                '</div>'+
+                                            '</div>'
+                                                    }
+                                             $results.append('<div class="column">'+html+'</div>');
+                                                  }
+                                            }else{
+                                                if(FILETYPE == 'video/mp4'){
+                                                     html = 
+                                            '<div class="box" id ="'+element.ID+'" data-num="'+id+'" style="width:100%;">'+
+                                                '<video width="320" height="240" >'+
+                                                    '<source src="'+FILENAME+'" type="video/mp4">'+
+                                                    'Your browser does not support the video tag.'+
+                                                    '</video>'+
+                                                '<div class="NewsHeading">'+
+                                                '<p style="font-weight: bold;color:white;">'+element.POST_TYPE +'<br /><span style="font-weight: 100;color:white;">'+element.BODY+'</span></p>'+
+                                                '</div>'+
+                                            '</div>'
+                                                }else{
+                                                    html = 
+                                            '<div class="box" id ="'+element.ID+'" data-num="'+id+'" style="width:100%;">'+
+                                               '<img src ="'+FILENAME+'">'+
+                                                '<div class="NewsHeading">'+
+                                                '<p style="font-weight: bold;color:white;">'+element.POST_TYPE +'<br /><span style="font-weight: 100;color:white;">'+element.BODY+'</span></p>'+
+                                                '</div>'+
+                                            '</div>' 
+                                                }
+                                             $results.append('<div class="column">'+html+'</div>');
+                                            }
+                                           id++
+                                            
+                                        }else{
+                                            console.log('exist')
+                                        }
+                                        $results.removeData("loading");
+                                    })
+                                }
+                                
+                            }
+                        })
+                    }
+            }
+                
+            })
+        }
+        prepend($('.news_row'))
+
+    })()
+    

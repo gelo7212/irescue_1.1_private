@@ -1,0 +1,73 @@
+
+.modal-header
+    h5#exampleModalCenterTitle.modal-title #{user.Account_NAME}
+    .mb-1.text-muted #{user.Account_USERNAME}
+    button.close(type='button', data-dismiss='modal', aria-label.modal_lbl='Close')
+    span(aria-hidden='true' style="font-color='white'") ×
+.modal-body
+    form#updateForm(action='/', novalidate='')
+        .alert_cont2
+        .row
+            input#custId(type='hidden', name='_ID_', value=user.Account_ID)
+            .form-group.col-lg-6
+                label.modal_lbl Fullname
+                input#username1.form-control(type='', value=user.Account_NAME, name='fullname1')
+                span.form-text.small Your name to app
+            //- .form-group.col-lg-6
+            //-     label.modal_lbl Password
+            //-     input#password.form-control(type='password', value='', name=' password')
+            //-     span.form-text.small Your hard to guess password
+            //- .form-group.col-lg-6
+            //-     label.modal_lbl Repeat Password
+            //-     input#repeatpassword.form-control(type='password', value='', name='repeatpassword')
+            //-     span.form-text.small Please repeat your pasword
+            .form-group.col-lg-6
+                label.modal_lbl Email Address
+                input#email1.form-control(type='', value=user.Account_EMAIL, name='email1')
+                span.form-text.small User address email to contact
+            .form-group.col-lg-6
+                label.modal_lbl Administrator
+                br
+                select#AdminType1.form-control.js-example-basic-single(name='AdminType1',onChange="cct1(this.value);")
+                    option(value='CA') Capitol Administrator
+                    option(value='MA') Municipal Administrator
+                    option(value='BH') Barangay Hall
+                    option(value='PS') Police Station
+                    option(value='AMBU') Ambulance
+                    option(value='FS') Fire Stations
+                span.form-text.small   User access level
+            .form-group.col-lg-6#form_prov1
+                label.modal_lbl Province
+                br
+                select#SelectProvince1.form-control.js-example-basic-single(name='Province1',onChange="changecat1(this.value);")
+                    option(value='BULACAN') BULACAN
+                span.form-text.small User location
+            .form-group.col-lg-6#formMun1
+                label.modal_lbl Municipal
+                br
+                select#Selectmunicipal1.form-control.js-example-basic-single(name='Municipal1',onChange="abrngy1(this.value)")
+                span.form-text.small User location
+            .form-group.col-lg-6#formopt1
+                label.modal_lbl 
+                br
+                select#SelectOption1.form-control.js-example-basic-single(name='Barangay1',onChange="")
+                span.form-text.small User location
+                style.
+                    .modal_lbl{
+                        color:white;
+                    }
+        script.
+            cct1("#{user.Account_TYPE_ID}")
+            changecat1("#{user.Account_Province}")
+            abrngy1("#{user.Account_Municipal}")
+
+            $("select#AdminType1").val("#{user.Account_TYPE_ID}");
+            $("select#SelectProvince1").val("#{user.Account_Province}");
+            $("select#Selectmunicipal1").val("#{user.Account_Municipal}");
+            $("select#SelectOption1").val("#{user.Account_Barangay}");                             
+                                           
+
+.modal-footer
+    button.btn.btn-danger#closebtn(type='button', data-dismiss='modal') Close
+    button#saveChanges.btn.btn-primary(type='button') Save changes
+             

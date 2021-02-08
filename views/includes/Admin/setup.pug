@@ -1,0 +1,83 @@
+html(lang='en')
+  head
+    meta(charset='utf-8')
+    meta(name='viewport', content='width=device-width, initial-scale=1, shrink-to-fit=no')
+    meta(name='description', content='')
+    link(rel='stylesheet', href='../bower_components/bootstrap/dist/css/bootstrap.css')
+    script(src='../bower_components/jquery/dist/jquery.js')
+    style.
+      .bd-placeholder-img {
+      font-size: 1.125rem;
+      text-anchor: middle;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      }
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;  
+        }
+      }
+    // Custom styles for this template
+    link(href='../stylesheets/login.css', rel='stylesheet')
+    body.text-center
+        form.form-signin(action='/Administrator/setup/' ,method='POST')
+          //img.mb-4(src='/docs/4.3/assets/brand/bootstrap-solid.svg', alt='', width='72', height='72')
+          h1.h3.mb-3.font-weight-normal  Setup Administrator Account
+          .alert_cont
+          .container
+            .row
+              .col(style='padding-left:0!important;padding-right:0!important;margin-right: 1pc')
+                label.sr-only(for='newFname') Firstname
+                input#newFname.form-control(type='text', placeholder='Firstname', required='', autofocus='',style="margin-bottom: 0.5pc;",name ='firstname')
+              .col(style='padding-left:0!important;padding-right:0!important')
+                label.sr-only(for='newlastname') Lastname
+                input#newlastname.form-control(type='text', placeholder='Lastname', required='', autofocus='',style="margin-bottom: 0.5pc;",name ='lastname')
+          label.sr-only(for='newName') Username
+          input#newName.form-control(type='text', placeholder='Username', required='', autofocus='',style="margin-bottom: 0.5pc;",name ='username')
+          select.custom-select.custom-select(name='level' ,style="margin-bottom: 0.5pc;")
+            option(value='0') Level
+            option(selected='') Super Admin
+          select.custom-select.custom-select(name='location',style="margin-bottom: 0.5pc;")
+            option(selected='') Location
+            option(value='One') One
+            option(value='Bulacan') Bulacan
+            option(value='Three') Three
+          label.sr-only(for='newEmail') Email address
+          input#newEmail.form-control(type='email', placeholder='Email address', required='', autofocus='',style="margin-bottom: 0.5pc;",name='email')
+          
+          button#setup.btn.btn-lg.btn-primary.btn-block Next
+          script.
+              "use strict";
+              $(document).ready(function() { 
+                  $("#setup").click(function(e) {
+                      console.log('click')
+                      e.preventDefault();
+                      $("#setup").empty().append( '<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>'+
+                                                                  'Loading...').attr('disabled','disabled');
+                      //$( ".alert" ).alert('close')
+                      $.ajax({
+                          type: 'POST',
+                          url: '/Administrator/setup/',
+                          data: $('form').serialize(),
+                          success: function(data) {
+                              console.log(data)
+                              if(data.success === true){
+                                
+                                  window.location.replace(data.link);
+                              }else{
+                                  $( ".alert_cont" ).empty().append( $( data ) );
+                                  $("#setup").empty().removeAttr('disabled').text('Create Link')
+                              }
+                          },
+                          error: function() {
+                              console.log("Signup was unsuccessful");
+                              $("#setup").empty().removeAttr('disabled').text('Create Link')
+                          }
+                      });
+                  });
+              })
+          p.mt-5.mb-3.text-muted © 2017-2019
+    script(src='../bower_components/bootstrap/dist/js/bootstrap.js')
+    script(src='../bower_components/bootstrap/dist/js/bootstrap.bundle.js')

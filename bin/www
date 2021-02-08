@@ -1,0 +1,215 @@
+#!/usr/bin/env node
+
+/**
+ * Module dependencies.
+ */
+
+const request = require('../function/main/request')
+var http = require('http'),
+util = require('util');
+const cluster = require('cluster');
+cluster.schedulingPolicy  = cluster.SCHED_RR
+const numCPUs = require('os').cpus().length;
+const stickyCluser = require('sticky-cluster');
+cluster.schedulingPolicy  = cluster.SCHED_RR
+var worker;
+var  httpProxy = require('http-proxy');
+var app = require('../app');
+var debug = require('debug')('irescue-1.1:server');
+
+var cpu = require('../function/admin/server_monitor')
+var cookieParse = require('../function/cookie/cookie')
+/**
+ * Get port from environment and store in Express.
+ */
+var servers =[];
+var server,websocket
+var wsPort = 9000;
+var io,client = require('socket.io-client');
+var ports =[
+  {
+    host: "localhost",
+    port: 8000
+  },
+  {
+    host: "localhost",
+    port: 8001
+  },
+  {
+    host: "localhost",
+    port: 8002
+  },
+  {
+    host: "localhost",
+    port: 8003
+  }
+];
+
+var portsArr =[
+  8000,
+  8001,
+  8002,
+  8003
+];
+var jwt = app.jwt
+var redis = require('socket.io-redis');
+if (cluster.isMaster) {
+}
+function startFn(callback){
+  
+  var async =require('async');
+  async.waterfall(
+    [
+      function(callback){
+        async.parallel(
+          [
+            function (callback) { setTimeout(callback, 2000); }
+          ],callback
+        )
+      },
+      function(services,callback){
+          //app.use(bodyParser.json());
+          var proxies = ports.map(function (target) {
+            return new httpProxy.createProxyServer({
+              target: target,
+              ws:true
+            });
+          });
+          function nextProxy() {
+            var proxy = proxies.shift();
+            proxies.push(proxy);
+            return proxy;
+          }
+          var proxyServer = http.createServer(function (req, res) {
+            request.messageHandler({cmd:'notifyRequest'})
+            console.log('proxyServer ',nextProxy().options.target.port,process.pid)
+            nextProxy().web(req, res)
+          });
+          proxyServer.on('upgrade', function (req, socket, head) {
+            console.log('')
+            //nextProxy().ws(req, socket, head);
+          });
+          console.log('proxy remote serer')
+         
+          portsArr.forEach((port)=>{
+            normalizePort(process.env.PORT || port)
+            app.set('port', port);
+            server = http.createServer(app);
+            server.listen(port,function(err){
+              if (err) {
+                console.log('error occurred trying to listen on port 80');
+                return;
+              }
+              var uid = parseInt(process.env.SUDO_UID);
+              if (uid) {
+                process.setuid(uid);
+              }
+              console.log(uid)
+            })
+            
+            servers.push(server)
+            
+          })
+          io = app.io.attach(proxyServer)
+          io.adapter(redis({ host: 'localhost', port: 6379 }));
+          require('../function/socket-io/socket-io')(io)
+          io.sockets.on('connection', function (client) {
+            util.debuglog('Got websocket connection');
+          
+            client.on('message', function (msg) {
+              util.debuglog('Got message from client: ' + msg);
+            });
+            client.send('from server');
+          });
+          
+          //router =  let io = app.get("io");
+          
+          /**
+          */
+          
+          
+          proxyServer.on('error', onError);
+          //proxyServer.on('onListening');
+          callback(null,proxyServer)
+      }
+    ],
+    function(err,server){
+        // fail on error
+        if (err) { console.log(err); process.exit(1); }
+
+        // pass server instance to sticky-cluster
+        else callback(server);
+    }
+  )
+}
+  stickyCluser(startFn,{
+    concurrency: parseInt(require('os').cpus().length ),
+    port: normalizePort(process.env.PORT || '8080'),
+    debug: true,
+    env: function(index) {
+        return {stickycluster_worker_index: index};
+    }
+  })
+
+/**
+ * Normalize a port into a number, string, or false.
+ */
+
+function normalizePort(val) {
+  var port = parseInt(val, 10);
+
+  if (isNaN(port)) {
+    // named pipe
+    return val;
+  }
+
+  if (port >= 0) {
+    // port number
+    return port;
+  }
+
+  return false;
+}
+
+/**
+ * Event listener for HTTP server "error" event.
+ */
+
+function onError(error) {
+  if (error.syscall !== 'listen') {
+    throw error;
+  }
+
+  var bind = typeof port === 'string'
+    ? 'Pipe ' + port
+    : 'Port ' + port;
+
+  // handle specific listen errors with friendly messages
+  switch (error.code) {
+    case 'EACCES':
+      console.error(bind + ' requires elevated privileges');
+      process.exit(1);
+      break;
+    case 'EADDRINUSE':
+      console.error(bind + ' is already in use');
+      process.exit(1);
+      break;
+    default:
+      throw error;
+  }
+}
+
+/**
+ * Event listener for HTTP server "listening" event.
+ */
+
+function onListening() {
+  var addr = proxyServer.address();
+  var bind = typeof addr === 'string'
+    ? 'pipe ' + addr
+    : 'port ' + addr.port;
+  debug('Listening on ' + bind);
+  console.log('Listening on ' + bind, ` Worker ${process.pid} started`)
+}
+
+

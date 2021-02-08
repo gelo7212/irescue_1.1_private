@@ -1,0 +1,107 @@
+.col
+    .card.shadow
+        .card-header.py-3
+            m-0.font-weight-bold.text-primary  Online User Map
+        .card-body
+            .row
+                .col-lg-6.mb-4
+                    samll Real time geographically activity
+                    #userLocation(style='position: relative; padding-bottom: 56.25%;height:57vh')
+                    script.
+                        $(function() {
+                            // Handler for .ready() called.
+                            var userLocation;
+                            userLocation = new google.maps.Map(document.getElementById('userLocation'), {
+                                center: {lat: -34.397, lng: 150.644},
+                                zoom: 8
+                            });
+                        });
+                        
+                    .hoverinfo
+                    strong #{Account_LOCATION}
+                    
+                .col-lg-6.mb-4
+                    table#logsTable.table
+                        thead
+                            tr
+                                th
+                                    | User ID
+                                th
+                                    | IP
+                                th
+                                    | Time
+                                th
+                                    | Location
+                        tbody
+                            tr
+                                td 79 AT_QnqVW
+                                td 23.84.83.24
+                                td 18:08:27 pm
+                                td 95
+                            tr
+                                td 50 AT_SeqqV
+                                td 35.9.37.73
+                                td 18:08:28 pm
+                                td 38
+                            tr
+                                td 42 AT_eNZNg
+                                td 1.4.82.8
+                                td 18:08:28 pm
+                                td 26
+                            tr
+                                td 46 AT_kcxRS
+                                td 39.74.29.90
+                                td 18:08:29 pm
+                                td 23
+                            tr
+                                td 80 AT_jZHqc
+                                td 79.70.2.97
+                                td 18:08:30 pm
+                                td 7
+                            tr
+                                td 4 AT_BoCZo
+                                td 55.41.72.56
+                                td 18:08:30 pm
+                                td 67
+                            tr
+                                td 29 AT_OTyCv
+                                td 38.59.33.96
+                                td 18:08:31 pm
+                                td 94
+                            tr
+                                td 28 AT_CyEDP
+                                td 19.41.100.54
+                                td 18:08:32 pm
+                                td 61
+                            tr
+                                td 54 AT_CgMrp
+                                td 61.18.3.9
+                                td 18:08:32 pm
+                                td 98
+                            tr
+                                td 50 AT_eyevy
+                                td 29.54.27.45
+                                td 18:08:33 pm
+                                td 52
+                            tr
+                                td 4 AT_rZtki
+                                td 82.97.77.13
+                                td 18:08:33 pm
+                                td 83
+                            tr
+                                td 50 AT_xESYk
+                                td 9.26.36.55
+                                td 18:08:34 pm
+                                td 1
+                            tr
+                                td 37 AT_mqwRT
+                                td 57.78.83.28
+                                td 18:08:35 pm
+                                td 87
+                            tr
+                                td 2 AT_TOVRA
+                                td 49.55.18.46
+                                td 18:08:35 pm
+                                td 80
+
+           

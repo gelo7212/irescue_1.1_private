@@ -1,0 +1,30 @@
+extends layout
+
+block content
+  link(rel='stylesheet', href='bower_components/bootstrap/dist/css/bootstrap.css')
+  link(rel='stylesheet', href='stylesheets/cover.css')
+  script(src='bower_components/jquery/dist/jquery.js')
+  .body_pc(style="position: fixed;")
+    img.img-fluid(src='/images/br_h_rate.png',alt="Responsive image" style="filter: brightness(0.5);")
+  .cover-container.d-flex.w-100.h-100.p-3.mx-auto.flex-column(style="z-index:2")
+    header.masthead.mb-auto
+      .inner
+        h3.masthead-brand I-Rescue
+        nav.nav.nav-masthead.justify-content-center
+          a.nav-link.active(href='#') 
+          a.nav-link(href='/Administrator') Login
+    main.inner.cover(role='main')
+      
+      h1.cover-heading
+      p.lead
+        | 
+      p.lead
+        
+    footer.mastfoot.mt-auto
+      .inner
+        p
+          | Contact us 
+          a(href='mailto:bulacan_rescue@yahoo.com?__xts__=') bulacan_rescue@yahoo.com 
+          |  Phone 
+          a(href='javascript:void(0)') (044) 791 0566
+          |  

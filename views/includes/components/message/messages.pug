@@ -1,0 +1,13 @@
+-var n = messages.length
+-n=n-1
+-console.log(messages)
+while n >= 0
+    if messages[n].SENDING_USER_ID == me
+        li.replies(data-id=messages[n].ID)
+            img(src='http://emilcarlsson.se/assets/harveyspecter.png')
+            p #{messages[n].BODY}
+    else
+        li.sent(data-id=messages[n].ID)
+            img(src='http://emilcarlsson.se/assets/harveyspecter.png')
+            p #{messages[n].BODY}
+    -n--
