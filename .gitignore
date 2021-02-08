@@ -41,6 +41,11 @@ build/Release
 node_modules/
 jspm_packages/
 
+<<<<<<< HEAD
+=======
+#folders
+key/
+>>>>>>> origin/master
 # TypeScript v1 declaration files
 typings/
 
@@ -104,3 +109,7 @@ dist
 .tern-port
 
 .clinic/
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/master

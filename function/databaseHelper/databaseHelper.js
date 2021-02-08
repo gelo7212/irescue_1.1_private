@@ -1,4 +1,5 @@
 
+<<<<<<< HEAD
 var mysql2Promise  = require('mysql2');
 // const pool = mysql2Promise.createPool({
 //   host: 'localhost',
@@ -40,6 +41,12 @@ const port = 3311;
 // conts port = 3306;
 const user = 'root';
 const password = 'Eskabetche@72127';
+=======
+var mysql2Promise  = require('mysql2');const port = 3311;
+// conts port = 3306;
+const user = 'root';
+const password = '';
+>>>>>>> origin/master
 const pool = mysql2Promise.createPool({
   host: 'localhost',
   port:port,
