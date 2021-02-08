@@ -1,0 +1,126 @@
+
+html(lang='en')
+  head
+    meta(charset='utf-8')
+    meta(name='viewport', content='width=device-width, initial-scale=1, shrink-to-fit=no')
+    meta(name='description', content='')
+    link(rel='stylesheet', href='../../bower_components/bootstrap/dist/css/bootstrap.css')
+    script(src='../../bower_components/jquery/dist/jquery.js')
+    style.
+      .bd-placeholder-img {
+      font-size: 1.125rem;
+      text-anchor: middle;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      }
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;  
+        }
+      }
+    // Custom styles for this template
+    if _verify == true
+        link(href='../../../../stylesheets/login.css', rel='stylesheet')
+        script(src='../../../../javascripts/passwordValidation.js')
+    else
+        link(href='../../stylesheets/login.css', rel='stylesheet')
+        script(src='../../javascripts/passwordValidation.js')
+        
+    body.text-center.justify-content-center(style="margin: 2pc;")
+        .card
+            .card-header
+                |  Setup Administrator Account
+            .card-body 
+                if token!=false
+                    -function convertDate(dateLong){
+                        -const date = new Date(dateLong)
+                        -return date
+                    -}
+                    -function getRemTime(date1_ms, date2_ms){
+                        -var one_day = 1000*60*60*24;
+                        -var difference_ms = (date2_ms) - (date1_ms);
+                        -difference_ms = difference_ms/1 ;
+                        -var seconds = Math.floor(difference_ms % 60);
+                        -difference_ms = difference_ms/60; 
+                        -var minutes = Math.floor(difference_ms % 60);
+                        -difference_ms = difference_ms/60; 
+                        -var hours = Math.floor(difference_ms % 24);  
+                        -var days = Math.floor(difference_ms/24);
+                        -console.log(date ,token.exp ,(Math.floor(new Date().getTime()/1000.0))+28800)
+                        -return days + ' days, ' + hours + ' hours, ' + minutes + ' minutes, and ' + seconds + ' seconds'; 
+                    -}
+                    -function getrem(date1_ms, date2_ms){
+                        -var seconds = (date2_ms- date1_ms) / 1000;
+                        -return seconds
+                    -}
+
+                    .alert_cont
+                        .alert.alert-info(role='alert')
+                            | Your registration link will expire after #{getRemTime( date/1000,token.exp )+'.'}           
+                    .card.text-left(style="margin-bottom: 1pc;")
+                        .card-body
+                            h5.card-title.text-center Account Info
+                            h6.card-subtitle.mb-2.text-muted Email : #{token.Account_EMAIL}
+                            p.card-subtitle.mb-2.text-muted  Fullname : #{token.Account_NAME}
+                            if typeof token.Account_Municipal == 'undefined'
+                                -token.Account_Municipal =''
+                            if typeof token.Account_Barangay == 'undefined'
+                                -token.Account_Barangay = ''
+                            p.card-subtitle.mb-2.text-muted  Location: #{token.Account_Province +' '+token.Account_Municipal+' '+token.Account_Barangay}
+                    .code_container
+                        form.form-signin(action='/Administrator/account/'+uuid+'/' method='POST' style='max-width:47pc')
+                            label.sr-only(for='newName') Username
+                            input#newName.form-control(type='text', placeholder='Username', required='', autofocus='',style="margin-bottom: 0.5pc;",name ='newusername')
+                            .form-group.has-feedback
+                                label.sr-only(for='inputPassword') Password
+                                input#NewPassword.form-control(type='password', placeholder='Password', required='',name='password')
+                                span.glyphicon.glyphicon-lock.form-control-feedback
+                            label.sr-only(for='inputPassword') Verify Password 
+                            input#VerifyPassword.form-control(type='password', placeholder='Verify Password', required='')                    
+                            button#save.btn.btn-lg.btn-primary.btn-block Save
+                else
+                    include ../components/alert/alert-warning.pug
+                script.
+                    "use strict";
+                    $(document).ready(function() { 
+                        $("#save").click(function(e) {
+                            console.log('click')
+                            e.preventDefault();
+                            var name = $.trim($('#newName').val());
+                            var pass1 =  $.trim($('#NewPassword').val());
+                            var pass2 =  $.trim($('#VerifyPassword').val());
+                            // Check if empty of not
+                            if (name  === '' || pass1 === '' || pass2=== '') {
+                                alert('Text-field is empty.');
+                                return false;
+                            }
+                            $("#save").empty().append( '<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>'+
+                                                                        'Loading...').attr('disabled','disabled');
+                            //$( ".alert" ).alert('close')
+                            $.ajax({
+                                type: 'POST',
+                                url: '/Administrator/account/#{uuid}/',
+                                data: $('form').serialize(),
+                                success: function(data) {
+                                    console.log(data)
+                                    console.log(data.success)
+                                    $( ".alert_cont" ).empty().append( $( data ));
+                                    if($('.alert-heading').text() == "Account Created."){
+                                        $("#save").empty().removeAttr('disabled').text('Sign in')
+                                        $(".code_container").empty()
+                                    }else{
+                                        $("#save").empty().removeAttr('disabled').text('Save')
+                                    }
+                                },
+                                error: function() {
+                                    console.log("Signup was unsuccessful");
+                                    $("#save").empty().removeAttr('disabled').text('Save')
+                                }
+                            });
+                        });
+                    })
+                p.mt-5.mb-3.text-muted © 2017-2019
+                script(src='../../bower_components/bootstrap/dist/js/bootstrap.js')
+                script(src='../../bower_components/bootstrap/dist/js/bootstrap.bundle.js')

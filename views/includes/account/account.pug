@@ -1,0 +1,638 @@
+
+link(href='stylesheets/accountmain.css', rel='stylesheet')
+link(href='stylesheets/select2.min.css', rel='stylesheet')
+script(src='javascripts/select2.js')
+script(src='javascripts/account/account.js')
+
+.container-fluid
+    .row
+        .col-lg-12
+            .panel.panel-filled.shadow
+                .panel-heading.card-header
+                    .panel-tools
+                        a.panel-toggle
+                            i.fa.fa-chevron-up
+                    | New Admin
+                .panel-body
+                    .container-center.lg.animated.slideInDown
+                        
+                        .panel.panel-filled
+                            .panel-body
+                                p
+                                form#loginForm(action='/', novalidate='')
+                                    .alert_cont
+                                    .row
+                                        .form-group.col-lg-6
+                                            label Fullname
+                                            input#username.form-control(type='', value='', name='fullname')
+                                            span.form-text.small Your name to app
+                                        //- .form-group.col-lg-6
+                                        //-     label Password
+                                        //-     input#password.form-control(type='password', value='', name='newpassword')
+                                        //-     span.form-text.small Your hard to guess password
+                                        //- .form-group.col-lg-6
+                                        //-     label Repeat Password
+                                        //-     input#repeatpassword.form-control(type='password', value='', name='repeatpassword')
+                                        //-     span.form-text.small Please repeat your pasword
+                                        .form-group.col-lg-6
+                                            label Email Address
+                                            input#email.form-control(type='', value='', name='newemail')
+                                            span.form-text.small User address email to contact
+                                        .form-group.col-lg-6
+                                            label Administrator
+                                            br
+                                            select#AdminType.form-control.js-example-basic-single(name='AdminType',onChange="cct(this.value);")
+                                                option(value='CA') Capitol Administrator
+                                                option(value='MA') Municipal Administrator
+                                                option(value='BH') Barangay Hall
+                                                option(value='PS') Police Station
+                                                option(value='AMBU') Ambulance
+                                                option(value='FS') Fire Stations
+                                            span.form-text.small New user access level
+                                        .form-group.col-lg-6#form_prov
+                                            label Province
+                                            br
+                                            select#SelectProvince.form-control.js-example-basic-single(name='Province',onChange="changecat(this.value);")
+                                                option(value='BULACAN') BULACAN
+                                            span.form-text.small User location
+                                        .form-group.col-lg-6#formMun
+                                            label Municipal
+                                            br
+                                            select#Selectmunicipal.form-control.js-example-basic-single(name='Municipal',onChange="abrngy(this.value)")
+                                            span.form-text.small User location
+                                        .form-group.col-lg-6#formopt
+                                            label 
+                                            br
+                                            select#SelectOption.form-control.js-example-basic-single(name='Barangay',onChange="")
+                                            span.form-text.small User location
+                                        script.
+                                            function copy(element){
+                                                var $temp = $("<input>");
+                                                $("body").append($temp);
+                                                $temp.val($(element).text()).select();
+                                                document.execCommand("copy");
+                                                $temp.remove();
+                                            }
+                                          
+                                            
+                                            function cct(value){
+                                                $("#formopt label").text("Barangay")
+                                                switch(value){
+                                                    case "CA":
+                                                        $("#form_prov")
+                                                        $("#Selectmunicipal").prop('disabled',true)
+                                                        $("#SelectOption").prop('disabled',true)
+                                                        break;
+                                                    case "MA":
+                                                        $("#form_prov")
+                                                        $("#Selectmunicipal").prop('disabled',false)
+                                                        $("#SelectOption").prop('disabled',true)
+                                                        break;
+                                                    case "BH":
+                                                        $("#form_prov")
+                                                        $("#Selectmunicipal").prop('disabled',false)
+                                                        $("#SelectOption").prop('disabled',false)
+                                                        $("#formopt label").text("Barangay")
+                                                        break;
+                                                    case "PS":
+                                                        $("#form_prov")
+                                                        $("#Selectmunicipal").prop('disabled',false)
+                                                        $("#SelectOption").prop('disabled',false)
+                                                        $("#formopt label").text("Police Station")
+                                                        break;
+                                                    case "AMBU":
+                                                        $("#form_prov")
+                                                        $("#Selectmunicipal").prop('disabled',false)
+                                                        $("#SelectOption").prop('disabled',false)
+                                                        $("#formopt label").text("Ambulance")
+                                                        break;
+                                                    case "FS":
+                                                        $("#form_prov")
+                                                        $("#Selectmunicipal").prop('disabled',false)
+                                                        $("#SelectOption").prop('disabled',false)
+                                                        $("#formopt label").text("Fire Stations")
+                                                        break;
+                                                }
+                                            }
+                                            var MunicipalByCategory = {
+                                                BULACAN: ["Angat","Balagtas","Baliuag","Bocaue","Bulakan","Bustos","Calumpit","DRT","Guiguinto","Hagonoy","Malolos","Marilao","Meycauayan","Norzagaray","Obando","Pandi","Paombong","Plaridel","Pulilan","San Ildefonso","San Jose Del Monte","San Miguel","San Miguel","San Rafael","Santa Maria"]
+                                            }
+                                            
+                                            function changecat(value){
+                                                if (value.length == 0) {
+                                                        document.getElementById("Selectmunicipal").innerHTML = "<option></option>";
+                                                    }
+                                                else {
+                                                    var catOptions = "";
+                                                    for (categoryId in MunicipalByCategory[value]) {
+                                                        catOptions += "<option value="+MunicipalByCategory[value][categoryId]+">" + MunicipalByCategory[value][categoryId] + "</option>";
+                                                    }
+                                                    document.getElementById("Selectmunicipal").innerHTML = catOptions;
+                                                }
+                                            }
+                                            var BarangayByCategory={
+                                                Angat:["Banaban", "Baybay", "Binagbag", "Donacion", "Encanto", "Laog", "Marungko", "Niugan", "Paltok", "Pulong Yantok", "San Roque", "Santa Cruz", "Santa Lucia","Santo Cristo", "Sulucan","Taboc"],
+                                                Balagtas:["Borol 2nd", "Borol 1st", "Dalig", "Longos", "Panginay", " Pulong Gubat", " San Juan","Santol", "Wawa "],
+                                                Baliuag: ["Bagong Nayon", "Barangca", "Calantipay", "Catulinan", "Concepcion", "Hinukay", "Makinabang", "Matangtubig", "Pagala", "Paitan", "Piel", "Pinagbarilan", "Poblacion", "Sabang", "San Jose", "San Roque", "Santa Barbara", "Santo Cristo", "Santo Niño", "Subic", "Sulivan", "Tangos", "Tarcan", "Tiaong", "Tibag", "Tilapayong"],
+                                                Bocaue:[ "Antipona", "Bagumbayan", "Bambang", "Batia", "Biñang 1st", "Biñang 2nd", "Bolacan", "Bundukan", "Bunlo", "Caingin", "Duhat", "Igulot", "Lolomboy", "Poblacion", "Sulucan", "Taal", "Tambobong", "Turo"],
+                                                Bulakan:["Bagumbayan", "Balubad", "Bambang", "Matungao", "Maysantol", "Perez", "Pitpitan", "San Francisco", "San Jose (Poblacion)", "San Nicolas", "Santa Ana", "Santa Ines", "Taliptip"],
+                                                Bustos:["Bonga Mayor", "Bonga Menor", "Buisan", "Camachilihan", "Cambaog", "Catacte", "Liciada", "Malamig", "Malawak", "Poblacion", "San Pedro", "Talampas", "Tanawan"],
+                                                Calumpit:["Balite", "Balungao", "Buguion", "Bulusan", "Calizon", "Calumpang", "Caniogan", "Corazon", "Frances", "Gatbuca", "Gugo", "Iba Este", "Iba O'Este", "Longos", " Meysulao", "Meyto", "Palimbang", "Panducot", "Pio Cruzcosa", "Poblacion", "Pungo", "San Jose", "San Marcos", "San Miguel", "Santa Lucia", "Santo Niño", "Sapang Bayan", "Sergio Bayan"],
+                                                DRT:["Bayabas", "Kabayunan", "Camachin", "Camachile", "Kalawakan", "Pulong Sampalok", "Talbak"],
+                                                Guiguinto:["Abangan Norte    ", "  Abangan Sur      ", "  Ibayo            ", "  Lambakin         ", "  Lias             ", "  Loma de Gato     ", "  Nagbalon         ", "  Patubig          ", "  Poblacion I  ", "  Poblacion II     ", "  Prenza I         ", "  Prenza II        ", "  Santa Rosa I     ", "  Santa Rosa II    ", "  Saog             " ,"Cutcut", "  Daungan", "Ilang‑Ilang", "Malis", "Panginay", "Poblacion", "Pritil", "Pulong Gubat", "Santa Cruz", "Santa Rita", "Tabang", "Tabe", "Tiaong"],
+                                                Hagonoy: ["Abulalas", "  Carillo", "  Iba", "  Mercado", "  Palapat", "  Pugad", "  Sagrada Familia", "  San Agustin", "  San Isidro", "  San Jose", "  San Juan", "  San Miguel", "  San Nicolas", "  San Pablo", "  San Pascual", "  San Pedro", "  San Roque", "  San Sebastian", "  Santa Cruz", "Santa Elena", "Santa Monica", "Santo Niño (Poblacion)", "Santo Rosario", "Tampok", "Tibaguin"],
+                                                Malolos:[ "Anilao", "Atlag", "Babatnin", "Bagna", "Bagong Bayan", "Balayong", "Balite", "Bangkal", "Barihan", "Bulihan", "Bungahan", "Caingin", "Calero", "Caliligawan", "Canalate", "Caniogan", "Catmon", "Cofradia", "Dakila", "Guinhawa", "Ligas", "Liang", "Longos", "Look 1st", "Look 2nd", "Lugam", "Mabolo", "Mambog", "Masile", "Matimbo", "Mojon", "Namayan", "Niugan", "Pamarawan", "Panasahan", "Pinagbakahan", "San Agustin", "San Gabriel", "San Juan", "San Pablo", "San Vicente (Poblacion)", "Santiago", "Santisima Trinidad", "Santo Cristo", "Santo Niño (Poblacion)", "Santo Rosario (Poblacion)", "Santor", "Sumapang Bata", "Sumapang Matanda", "Taal", "Tikay"],
+                                                Marilao:["  Abangan Norte    ", "  Abangan Sur      ", "  Ibayo            ", "  Lambakin         ", "  Lias             ", "  Loma de Gato     ", "  Nagbalon         ", "  Patubig          ", "  Poblacion I  ", "  Poblacion II     ", "  Prenza I         ", "  Prenza II        ", "  Santa Rosa I     ", "  Santa Rosa II    ", "  Saog             "],
+                                                Meycauayan:["  Bagbaguin        ", "  Bahay Pare  ", "  Bancal        ", "  Banga        ", "  Bayugo         ", "  Caingin         ", "  Calvario        ", "  Camalig       ", "  Hulo         ", "  Iba        ", "  Langka       ", "  Lawa   ", "  Libtong        ", "  Liputan  ", "  Longos          ", "  Malhacan       ", "  Pajo     ", "  Pandayan     ", "  Pantoc          ", "  Perez         ", "  Poblacion       ", "  Saluysoy         ", "  Saint Francis (Gasak)  ", "  Tugatog         ", "  Ubihan         "]
+                                            }
+                                            function abrngy(value){
+                                                if (value.length == 0) {
+                                                        document.getElementById("SelectOption").innerHTML = "<option></option>";
+                                                    }
+                                                else {
+                                                    var catOptions = "";
+                                                    for (categoryId in BarangayByCategory[value]) {
+                                                        catOptions += "<option>" + BarangayByCategory[value][categoryId] + "</option>";
+                                                    }
+                                                    document.getElementById("SelectOption").innerHTML = catOptions;
+                                                }
+                                            }
+                                            cct("CA")
+                                            changecat("BULACAN")
+                                            abrngy('Angat')
+                                            var arr =[]
+                                            for(var i = 0; i <= $('#tableOFThis tr').length-1;i++){
+                                                arr.push($("#tableOFThis").find('tr').eq(i).find('td').eq(1).html())
+
+                                            }
+                                            console.log(arr)
+                                            
+                                           
+
+                                    div
+                                        button.btn.btn-accent#create_link(type='submit') Create Link
+                                  
+    .row
+        .col-lg-12
+            .panel.panel-filled.shadow
+                .panel-heading.card-header
+                    .panel-tools
+                        a.panel-toggle
+                            i.fa.fa-chevron-up
+                    | Accounts
+                    .d-flex.justify-content-between.flex-wrap.flex-md-nowrap.align-items-center.pt-3.pb-2.mb-3.border-bottom
+                    .row
+                        .form-group.col-lg-3
+                            label User Type
+                            br
+                            select#searchState.form-control.js-example-basic-single(name='state')
+                                option(value='A') Administrator
+                                option(value='C') Client
+                        .form-group.col-lg-3
+                            label Keyword
+                            input#searchKey.form-control(type='', value='', name='keyword')
+                        .form-group.col-lg-2
+                            label Search
+                            button.btn.btn-accent.form-control#searchB Search
+                .panel-body
+                    .container-center.lg.animated.slideInDown
+                        .panel.panel-filled
+                            .panel-body
+                                span.badge.badge-pill.badge-danger Banned/Disable Account
+                                span.badge.badge-pill.badge-light Active Accounts
+
+                                .table-responsive
+                                    .tableFixHead
+                                        table#logsTable.table.table-hover
+                                        .d-flex.justify-content-center()
+                                            .spinner-grow#tableSpinner(style='width: 3rem; height: 3rem;', role='status')
+                                                span.sr-only Loading...
+                        nav#pagination_1(aria-label='Page navigation')
+                            ul#pagination_1_ul.pagination.justify-content-center(data-size="0")
+                                
+                        script.
+                            "use strict";
+                            $(document).ready( function() {
+                                $('#searchState').change(()=>{
+                                    var myData = 
+                                    {
+                                        seachBy:'',
+                                        offset:0
+                                    }
+                                    Users(myData).then(eachBox=>{
+                                    pagination_dr_fn(eachBox,1,0).then(()=>{
+                                          $('ul#pagination_1_ul li:nth-child(2)').addClass('active')               
+                                    })
+                                })
+                                })
+                                function ClientAdmin(data){
+                                    return new Promise((resolve,reject)=>{
+                                        $('#logsTable').empty().append('<thead>'
+                                            +'<tr>'
+                                                +'<th class="fitwidth" scope="col">#</th>'
+                                                +'<th class="fitwidth" scope="col">Name</th>'
+                                                +'<th class="fitwidth" scope="col">Address</th>'
+                                                +'<th class="fitwidth" scope="col">Age</th>'
+                                                +'<th class="fitwidth" scope="col">Email</th>'
+                                                +'<th class="fitwidth" scope="col">Contact</th>'
+                                                +'<th class="fitwidth" scope="col">Options</th>'
+                                            +'</tr>'
+                                            +'</thead>'
+                                            +'<tbody>'
+                                                +'<tr></tr>'
+                                            +'</tbody>')
+                                        for(const t of data[1]){
+                                            var eachBox = t.TOTAL/500;
+                                            console.log(data[0])
+                                            for(const d of data[0] ){
+                                                console.log(d.Account_ISVERIFY)
+                                                $('#logsTable tbody tr:last-child').after('<tr><th class="fitwidth" scope="row">'+d.Client_ID+'</th><td class="fitwidth">'+d.Client_FULLNAME+'</td><td class="fitwidth">'+d.Client_ADDRESS+'</td><td class="fitwidth">'+d.Client_BIRTHDATE+'</td><td class="fitwidth">'+d.Client_EMAIL+'</td><td class="fitwidth">'+d.Client_MOBILE_NUMBER+'</td><td class="fitwidth"> <div class="btn-group-sm mr-2" role="group" aria-label="Third group"><button class="btn btn-secondary" type="button">More</button></div></td></tr>')
+                                               }
+                                            
+                                            return resolve(eachBox)
+                                        }
+                                    })
+                                }
+                                function UserAdmin(data){
+                                    return new Promise((resolve,reject)=>{
+                                        var Municipal
+                                        var Barangay
+                                        
+                                        console.log(data[1])
+                                        $('#logsTable').empty().append('<thead>'
+                                            +'<tr>'
+                                                +'<th class="fitwidth" scope="col">#</th>'
+                                                +'<th class="fitwidth" scope="col">Name</th>'
+                                                +'<th class="fitwidth" scope="col">Username</th>'
+                                                +'<th class="fitwidth" scope="col">Location</th>'
+                                                +'<th class="fitwidth" scope="col">Email</th>'
+                                                +'<th class="fitwidth" scope="col">Level</th>'
+                                                +'<th class="fitwidth" scope="col">Options</th>'
+                                            +'</tr>'
+                                            +'</thead>'
+                                            +'<tbody>'
+                                                +'<tr></tr>'
+                                            +'</tbody>')
+                                        for(const t of data[1]){
+                                            var eachBox = t.TOTAL/500;
+                                            console.log(data[0])
+                                            for(const d of data[0] ){
+                                                console.log(d.Account_ISVERIFY)
+                                                if(d.Account_Barangay != 'N/A')  
+                                                    Barangay = d.Account_Barangay
+                                                else 
+                                                    Barangay = ""
+                                                if(d.Account_Municipal != 'N/A' ) 
+                                                    Municipal = d.Account_Municipal
+                                                else
+                                                    Municipal = ""
+                                                if(d.Account_DISABLE)
+                                                    $('#logsTable tbody tr:last-child').after('<tr  class="table-danger" ><th class="fitwidth" scope="row">'+d.Account_ID+'</th><td class="fitwidth">'+d.Account_NAME+'</td><td class="fitwidth">'+d.Account_USERNAME+'</td><td class="fitwidth">'+d.Account_Province+' '+ Municipal+' '+Barangay+'</td><td class="fitwidth"> '+d.Account_EMAIL+'</td><td class="fitwidth"> '+d.Account_TYPE_ID+'</td><td class="fitwidth"> <div class="btn-group-sm mr-2" role="group" aria-label="Third group"><button class="btn btn-secondary" type="button">edit</button><button class="btn btn-secondary" type="button">More</button></div></td> </tr>');
+                                                else
+                                                    $('#logsTable tbody tr:last-child').after('<tr><th class="fitwidth" scope="row">'+d.Account_ID+'</th><td class="fitwidth">'+d.Account_NAME+'</td><td class="fitwidth">'+d.Account_USERNAME+'</td><td class="fitwidth">'+d.Account_Province+' '+ Municipal+' '+Barangay+'</td><td class="fitwidth"> '+d.Account_EMAIL+'</td><td class="fitwidth"> '+d.Account_TYPE_ID+'</td><td class="fitwidth"> <div class="btn-group-sm mr-2" role="group" aria-label="Third group"><button class="btn btn-secondary" type="button">edit</button><button class="btn btn-secondary" type="button">More</button></div></td> </tr>');
+                                            }
+                                            
+                                            return resolve(eachBox)
+                                        }
+                                    })
+                                }
+                                window.Users = function(a){
+                                    
+                                    return new Promise((resolve,reject)=>{
+                                        $("#logsTable tbody tr").empty()
+                                        $('#tableSpinner').show()
+                                        let searchState = $('#searchState').val()
+                                        let link = ''
+                                        if (searchState == 'C'){
+                                            link = '/user/client'
+                                        }else{
+                                            link = '/user/admin'
+                                        }
+                                        $.ajax({
+                                            type: 'POST',
+                                            url: link,
+                                            contentType: 'application/json',
+                                            data: JSON.stringify(a),
+                                            success: function(data) {
+                                                
+                                                if (searchState == 'C'){
+                                                    return resolve (ClientAdmin(data).then(result=>{
+                                                        
+                                                        $('#tableSpinner').hide()
+                                                        return result
+                                                    }))
+                                                }
+                                                else {
+                                                    return resolve (UserAdmin(data).then(result=>{
+                                                       
+                                                        $('#tableSpinner').hide()
+                                                        return result
+                                                    }))
+                                                }
+                                            },
+                                            error: function() {
+                                                console.log("Signup was unsuccessful");
+                                                $("#save").empty().removeAttr('disabled').text('Save')
+                                                return reject()
+                                            }
+                                        });
+                                    })
+                                    
+                                }
+                                
+                                
+                                var myData = 
+                                    {
+                                        seachBy:'PS',
+                                        offset:1
+                                    }
+                                $("#searchB").click(function(e) {
+                                    new Promise ((resolve,reject)=>{
+                                        console.log('click')
+                                        e.preventDefault();
+                                        $("#searchB").empty().append( '<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>'+
+                                                                                    'Loading...').attr('disabled','disabled');
+                                        //$( ".alert" ).alert('close')
+                                        var myData = 
+                                        {
+                                            seachBy:$("#searchKey").val(),
+                                            offset:0
+                                        }
+                                        var Municipal
+                                        var Barangay
+                                        let type = $('#searchState').val()
+                                        Users(myData).then(eachBox=>{
+                                            pagination_dr_fn(eachBox,1,0).then(()=>{
+                                                
+                                                $('ul#pagination_1_ul li:nth-child(2)').addClass('active')               
+                                            })
+                                            $("#searchB").empty().removeAttr('disabled').text('Search')
+                                        })
+                                        
+                                        
+                                    })
+                                    
+                                });
+                                window.pagination_dr_fn = function(size1,setActive,start){
+                                    return new Promise ((resolve,reject)=>{
+                                        $('#pagination_1_ul').empty().data('size',Math.ceil(size1))
+                                        var first5 = 0 
+                                        var next5 = 6
+
+                                        let size = Math.ceil(size1)
+                                        for(var eb = start ; eb <= size;eb++){
+                                            if(first5==0){
+                                                $('#pagination_1_ul').append('<li class="page-item disabled" disabled ="true"><a class="page-link" disabled ="true" href="javascript:void(0)" tabindex="-1" aria-disabled="true">Previous</a></li>')
+                                            }if(eb == Math.ceil(size)){
+                                                $('#pagination_1_ul').append('<li class="page-item"><a class="page-link" href="javascript:void(0)">Next</a></li>')
+                                            }else if(first5<=5){
+                                                if(first5==0){
+                                                    $('#pagination_1_ul').append('<li class="page-item"><a class="page-link" href="javascript:void(0)" data-index="'+parseInt(first5)+'" data-page="'+parseInt(eb+1)+'" data-row="'+parseInt((eb))+'">'+ parseInt(eb+1) +'</a></li>')
+                                                }else{
+                                                    $('#pagination_1_ul').append('<li class="page-item"><a class="page-link" href="javascript:void(0)" data-index="'+parseInt(first5)+'" data-page="'+parseInt(eb+1)+'"   data-row="'+parseInt((eb)*500)+'">'+ parseInt(eb+1) +'</a></li>')
+                                                }
+                                            }else if(eb>size-8 && eb<size-6){
+                                                next5++;
+                                                $('#pagination_1_ul').append('<li class="page-item"><a class="page-link" href="javascript:void(0)" data-index="'+parseInt(next5)+'" disabled ="true">...</a></li>')
+                                            }else if(eb>=size-5){
+                                                next5++;
+                                                $('#pagination_1_ul').append('<li class="page-item"><a class="page-link" href="javascript:void(0)" data-index="'+parseInt(next5)+'"  data-page="'+parseInt(eb+1)+'"  data-row="'+parseInt((eb)*500)+'">'+ parseInt(eb+1) +'</a></li>')
+                                            }
+                                            first5++
+                                        }
+                                        resolve()
+                                    }) 
+                                   
+                                }
+                                let pagination_ch_fn = function(showpage){
+                                    
+                                }
+                               
+                                Users(myData).then(eachBox=>{
+                                    pagination_dr_fn(eachBox,1,0).then(()=>{
+                                          $('ul#pagination_1_ul li:nth-child(2)').addClass('active')               
+                                    })
+                                    
+                                })
+                               
+                                $('#pagination_1').on('click','ul#pagination_1_ul li', function(e) 
+                                    {
+                                        new Promise ((resolve,reject)=>{
+
+                                        
+                                        console.log($(this).find("a").data("row"),' row')
+                                       
+                                            let active = parseInt($(this).find("a").text())
+                                            if($(this).find('a').text() === 'Previous'){
+                                                
+                                                if($('ul#pagination_1_ul li:nth-child(2)').find('a').text()>=1){
+                                                    
+                                                    active = parseInt($('ul#pagination_1_ul').find('.active').text())-1
+                                                    if(active > 0 ){
+                                                        active = parseInt($('ul#pagination_1_ul').find('.active').removeClass('active').text())-1
+                                                        console.log('active ' ,active)
+                                                        $('ul#pagination_1_ul li').find('a').filter(function() {
+                                                                return $(this).text() ==active;
+                                                        }).parent().addClass('active')
+                                                        if($('ul#pagination_1_ul li:nth-child(2)').find('a').text()>1){
+                                                            if($('ul#pagination_1_ul li:nth-child(2)').hasClass('active')){
+                                                                console.log(active,'FROM PREVIF active')
+                                                                pagination_dr_fn($('#pagination_1_ul').data('size'),$(this).find("a").data("index"),active-2)
+                                                                .then(()=>{
+                                                                    $('ul#pagination_1_ul li').find('a').filter(function() {
+                                                                        return $(this).text() == active;
+                                                                    }).parent().addClass('active')
+                                                                })
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }else if($(this).find('a').text() === 'Next'){
+                                                if(parseInt($('ul#pagination_1_ul').find('.active').text()) != $('#pagination_1_ul').data('size')){
+                                                    console.log('ttt', $('ul#pagination_1_ul').find('.active'))
+                                                    if(parseInt($('ul#pagination_1_ul').find('.active').text())>=5){
+                                                        active = parseInt($('ul#pagination_1_ul').find('.active').removeClass('active').text())
+                                                        console.log(active)
+                                                        pagination_dr_fn($('#pagination_1_ul').data('size'),$(this).find("a").data("index"),active-5)
+                                                        .then(()=>{
+                                                            $('ul#pagination_1_ul li').find('a').filter(function() {
+                                                                return $(this).text() == active+1;
+                                                            }).parent().addClass('active')
+                                                            console.log(active)
+                                                        })
+                                                    }else{
+                                                        active = parseInt($('ul#pagination_1_ul').find('.active').removeClass('active').text())+1
+                                                        console.log(active)
+                                                        $('ul#pagination_1_ul li').find('a').filter(function() {
+                                                                return $(this).text() ==active;
+                                                        }).parent().addClass('active')
+                                                    }
+                                                }
+                                            }else{
+                                                if(parseInt($(this).find('a').text())>=5){
+                                                    pagination_dr_fn($('#pagination_1_ul').data('size'),$(this).find("a").data("index"),parseInt($(this).find("a").text())-5)
+                                                    .then(()=>{
+                                                        $('ul#pagination_1_ul li').find('a').filter(function() {
+                                                            return $(this).text() == active;
+                                                        }).parent().addClass('active')
+                                                        console.log(active)
+                                                    })
+                                                }else{
+                                                    pagination_dr_fn($('#pagination_1_ul').data('size'),$(this).find("a").data("index"),0)
+                                                    .then(()=>{
+                                                        $('ul#pagination_1_ul li').find('a').filter(function() {
+                                                            return $(this).text() ==active;
+                                                        }).parent().addClass('active')
+                                                        console.log(active)
+                                                    })
+                                                }
+                                            }
+                                            resolve()
+                                    }).then(()=>{
+                                            var myData = 
+                                            {
+                                                seachBy:$("#searchKey").val(),
+                                                offset:parseInt($('ul#pagination_1_ul').find('.active').find('a').data('row'))
+                                            }
+                                            Users(myData).then(eachBox=>{
+
+                                            })
+                                    })
+                                    
+                                });//
+                                $('#logsTable')
+                                .on('click','.btn',function(e){
+                                   
+                                    if($(this).text()==='edit'){
+                                        $('#exampleModalCenter').modal({
+                                            keyboard: false
+                                        })
+                                        console.log($(this).parent().parent().parent().find('th').text())
+                                        as('/account/modal',$(this).parent().parent().parent().find('th').text(),'POST').then(()=>{
+                                            $('#exampleModalCenter').modal('show')
+                                        });}
+                                        
+                                    else if($(this).text()==='More'){
+                                        //$("#saveChanges").empty().append( '<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>'+
+                                                    //'Loading...').attr('disabled','disabled');
+                                        //$( ".alert" ).alert('close')
+                                        as('/account/modal',$(this).parent().parent().parent().find('th').text(),'DELETE').then(()=>{
+                                            $('#exampleModalCenter').modal('show')
+                                        });
+                                    }
+                                })
+                                window.as = (url,datais,type)=>{
+                                    console.log(datais)
+                                    return new Promise((resolve,reject)=>{
+                                        
+                                        let searchState = $('#searchState').val()
+                                        let Data ={
+                                                 _id: datais,
+                                                 searchState:searchState
+                                            }
+                                        $.ajax({
+                                            
+                                            type: type,
+                                            url: url,
+                                            contentType: 'application/json',
+                                            data: JSON.stringify(Data),
+                                            success: function(data) {
+                                                var Municipal
+                                                var Barangay
+                                                console.log(data)
+                                                $('.modal-content').empty().append(data)
+                                                resolve();
+                                            },
+                                            error: function() {
+                                                console.log("Signup was unsuccessful");
+                                                $("#save").empty().removeAttr('disabled').text('Save')
+                                                return reject()
+                                            }
+                                        });
+                                    })
+                                    
+                                }
+                            })
+
+                
+
+    script.
+        
+        window.getYearByDate = (date) =>{
+            return new Promise ((resolve,reject)=>{var birthYear_milli = new Date(date),
+                    now = new Date(),
+                    rem = now - birthYear_milli,
+                    y = 365*24*60*60*1000
+                    year = Math.floor(rem/y)
+                    return resolve(year)
+                })
+        }
+        window.ban_timer =  (date_start,timePeriod)=>{
+            return new Promise((resolve,reject)=>{
+                var myDate = new Date(date_start);
+                var date_start_on_milli = myDate.getTime()
+                var parts = timePeriod.split(/:/);
+                var timePeriodMillis =  (parseInt(parts[0], 10) * 60 * 60 * 1000) +
+                                        (parseInt(parts[1], 10) * 60 * 1000) + 
+                                        (parseInt(parts[2], 10) * 1000);
+                var newDate = new Date();
+                newDate.setTime(date_start_on_milli + timePeriodMillis);
+                
+                var newDate_new = new Date(newDate);
+                var now = new Date()
+                var rem =  newDate_new - now
+                var cd = 24 * 60 * 60 * 1000,
+                        ch = 60 * 60 * 1000,
+                        cs = 60*60*60*1000,
+                        d = Math.floor(rem / cd),
+                        h = Math.floor( (rem- d * cd) / ch),
+                        m = Math.floor( (rem - d * cd - h * ch) / 60000),
+                        s = ((rem % 60000) / 1000).toFixed(0);
+                        pad = function(n){ return n < 10 ? '0' + n : n; };
+                if( m === 60 ){
+                    h++;
+                    m = 0;
+                }
+                if( h === 24 ){
+                    d++;
+                    h = 0;
+                }
+               
+                var x = [d, pad(h), pad(m),pad(s)].join(':');
+                mydata={
+                    end:newDate,
+                    timer:x
+                }
+                return resolve (mydata)
+            }).catch(err=>{
+                console.log(err)
+            })
+            
+        }
+        $("#exampleModalCenter").on("hidden.bs.modal", function () {
+            // put your default event here
+            console.log('close')
+            clearInterval(interval_);
+            window.interval_ = false;
+           
+        });
+        $('.panel-toggle').on('click', function(event){
+            event.preventDefault();
+            var hpanel = $(event.target).closest('div.panel');
+            var icon = $(event.target).closest('i');
+            var body = hpanel.find('div.panel-body');
+            var footer = hpanel.find('div.panel-footer');
+            body.slideToggle(300);
+            footer.slideToggle(200);
+
+            // Toggle icon from up to down
+            icon.toggleClass('fa-chevron-up').toggleClass('fa-chevron-down');
+            hpanel.toggleClass('').toggleClass('panel-collapse');
+            setTimeout(function () {
+                hpanel.resize();
+                hpanel.find('[id^=map-]').resize();
+            }, 50);
+        });
+        $(document).ready(function() {
+            $('.js-example-basic-single').select2();
+        });

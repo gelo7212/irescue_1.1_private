@@ -1,0 +1,64 @@
+.modal-header
+    h5#exampleModalCenterTitle.modal-title User Details
+    button.close(type='button', data-dismiss='modal', aria-label.modal_lbl='Close')
+    span(aria-hidden='true' style="font-color='white'") ×
+.modal-body
+    .col.p-4.d-flex.flex-column.position-static
+        h3
+            strong.d-inline-block.mb-2.text-primary#del_id #{user.Client_ID}
+        h3.mb-0 #{user.Client_FULLNAME}
+        script.
+            getYearByDate( '#{user.Client_BIRTHDATE}').then(res=>{
+                $('#birthYear').text(res+' years old')
+            })
+        .mb-1.text-muted#birthYear
+        .mb-1.text-muted Address #{user.Client_ADDRESS}
+        .mb-1.text-muted Contact # #{user.Client_MOBILE_NUMBER}
+        .mb-1.text-muted Emails #{user.Client_EMAIL}
+        if !user.Client_NUMBER_ISVERIFY
+            p.mb-1.text-muted  This number was not verify
+        .mb-1.text-muted #{Client_EMAIL}
+        if !user.Client_EMAIL_ISVERIFY
+            p.mb-1.text-muted  This email was not verify
+        
+        br
+        if user.Client_IS_DISABLE
+            
+            if user.Client_OPTION == '24'
+                .mb-1.text-muted This Account was banned for approximate 
+                    span#date_ban #{user.Client_OPTION}
+                script.
+                    
+                    if(!interval_){
+                    interval_ = setInterval(function(){
+                        ban_timer('#{user.Client_DATE_BANNED}','24:00:00').then(time =>{
+                            $('#date_ban').text(time.timer)
+                        })
+                    }, 1000);}
+                    
+            else if user.Client_OPTION == '7'
+                .mb-1.text-muted This Account was banned for approximate 
+                    span#date_ban #{user.Client_OPTION} 
+                script.
+                    if(!interval_){
+                    interval_ = setInterval(function(){
+                        ban_timer('#{user.Client_DATE_BANNED}','168:00:00').then(time =>{
+                            $('#date_ban').text(time.timer)
+                        })
+                    }, 1000);}
+            else if user.Client_OPTION == 'PERMANENT'
+                .mb-1.text-muted This Account was Permanently banned
+
+        else
+            select.custom-select.custom-select-sm#long_
+                option(value='24') 24 Hours
+                option(value='7') 7 Days
+                option(value='PERMANENT') Permanent
+    style.
+        .modal_lbl ,p{
+            color:white;
+        }
+.modal-footer
+    button#closebtn.btn.btn-danger(type='button', data-dismiss='modal') Close
+    if !user.Client_IS_DISABLE
+        button#BanBtn.btn.btn-warning(type='button') Ban/Disable

@@ -1,0 +1,143 @@
+
+    
+link(rel='stylesheet prefetch', href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.2/css/font-awesome.min.css')
+script(src='/socket.io/socket.io.js')
+script(src='/javascripts/Cookie.js')
+script(src='bower_components/jquery/dist/jquery.js')
+link(rel='stylesheet', href='bower_components/bootstrap/dist/css/bootstrap.css')
+link(rel='stylesheet', href='stylesheets/chat_room.css')
+style.cp-pen-styles.
+#frame
+    include sidepanel
+    .content
+script.
+
+    $(function() {
+        var message = io('/message',{
+            query: {token: getCookie('_d.r')}
+        });
+        message.on('connect',function(){
+            console.log('User can now recieved message!');
+        })
+        message.on('my message',function(msg){
+            console.log(msg)
+            var $chatbox = $('#frame')
+            if(msg.from =='me'){
+                let html = '<li class="replies" id= "'+msg.mess_id+'"><img src="http://emilcarlsson.se/assets/harveyspecter.png" alt=""><p>'+msg.body+'</p></li>'
+                $('#frame').find('.messages').find('ul').append(html)
+                $chatbox.find('.msg').val('')
+            }else{
+                if($('#frame').find('.content').length == 0 || $('#frame').find('#frame').find('.contact-profile').data('id') != msg.from && $chatbox.find('.msg').val() == ''){
+                    popUpChatBox(msg.from)
+                }else{
+                    let html = '<li class="sent" id= "'+msg.mess_id+'"><img src="http://emilcarlsson.se/assets/harveyspecter.png" alt=""><p>'+msg.body+'</p></li>'
+                    $('#frame').find('.messages').find('ul').append(html)
+                }
+            }
+            setTimeout(function(){
+                $chatbox.find('.messages').animate({ scrollTop: $( $chatbox ).find('.messages').find('ul').find('li:last-child').position().top}, 1000);
+            },2000)
+        })
+        $('#frame').on('click' ,'.submit',function(){
+            console.log('send',$('#frame').find('#message-input').val(),$('#frame').find('.contact-profile').data('id'))
+            message.emit('send To',{body:$('#frame').find('#message-input').val(),to:$('#frame').find('.contact-profile').data('id')})
+        })
+        let threads =function(){
+            $.post('/message/chat-thread',{'OFFSET':0 },function(data){
+                let $sidepanel = $('#sidepanel')
+                console.log(data)
+                for(let a in data){
+                    console.log(data[a])
+                    $sidepanel.find('#contacts').find('ul').append(
+                    ' <li class="contact" id='+data[a].recipient+' data-thread='+data[a].THREAD_ID+' onclick=content('+data[a].recipient+')>'+
+                            ' <div class="wrap"><span class="contact-status online"></span><img src="http://emilcarlsson.se/assets/louislitt.png" alt="" />'+
+                                ' <div class="meta">'+
+                                ' <p class="name">'+data[a].recipient_name+'</p>'+
+                            ' <p class="preview" style="width: 41%;">'+data[a].BODY+' <span style="position: absolute; left: 42%;">'+data[a].SEND_DATE+'</span></p>'+
+                            ' </div>'+
+                        ' </div>'+
+                    ' </li>'
+                    )
+                }
+            })
+        }
+        threads()
+        window.loadMessages = function(THREAD,TO_USER, OFFSET ){
+            var $chatbox = $('#frame')
+            $.post('/message/t',{THREAD:THREAD,'TO_USER':TO_USER, 'OFFSET':OFFSET },function(data){
+                $( $chatbox ).find('.messages').find('ul').prepend( data );
+                $( $chatbox ).find(".loading").fadeOut('fast', function() {
+                    $(this).remove();
+                });
+                $( $chatbox ).find('.messages').removeData("loading");
+            })
+        }
+         window.content = function(id){
+            var $chatbox = $('.content')
+            $chatbox.empty()
+            let $contacts = $('#contacts')
+            $contacts.find('.active').removeClass('active')
+            $contacts.find('#'+id).addClass('active')
+
+            $.post('/message/chat-content',{id:id},function(data){
+            $( $chatbox ).html( data );
+            loadMessages($chatbox.find('#contacts').find('#'+id).data('thread'),id,0)
+            $results.find('.messages').scroll(function() {
+                if(($results.find('.messages').scrollTop()) == $results.find('ul').height()) {
+                    if (!$results.find('.messages').data("loading")) {
+                        $results.find('.messages').before($("<div class='d-flex loading justify-content-center'>"+
+                            "<div class='spinner-border spinner-border-sm 'style ='left: 40%;position: absolute;z-index:10;' role='status'>"+
+                                "<span class='sr-only'>Loading...</span>"+
+                            "</div>"+
+                        "</div>").fadeIn('slow')).data("loading", true); 
+                        setTimeout(function(){
+                                
+                            console.log('top ')
+                            loadMessages($chatbox.find('#contacts').find('#'+$chatbox.find('.contact-profile').data('id')).data('thread'),$chatbox.find('.contact-profile').data('id'),$results.find('.messages').find('li').length-1)
+                            $results.find('.messages').scrollTop(3)
+                        }, 1500)
+                    }
+                }
+            })
+            setTimeout(function(){
+                $chatbox.find('.messages').animate({ scrollTop: $( $chatbox ).find('.messages').find('ul').find('li:last-child').position().top }, 1000);
+            },2000)
+            })
+        }
+        var $results = $(".content");
+        
+    })
+    
+    $(".expand-button").click(function() {
+        $("#profile").toggleClass("expanded");
+            $("#contacts").toggleClass("expanded");
+    });
+
+    $("#profile-img").click(function() {
+        $("#status-options").toggleClass("active");
+    });
+    $("#status-options ul li").click(function() {
+        $("#profile-img").removeClass();
+        $("#status-online").removeClass("active");
+        $("#status-away").removeClass("active");
+        $("#status-busy").removeClass("active");
+        $("#status-offline").removeClass("active");
+        $(this).addClass("active");
+        
+        if($("#status-online").hasClass("active")) {
+            $("#profile-img").addClass("online");
+        } else if ($("#status-away").hasClass("active")) {
+            $("#profile-img").addClass("away");
+        } else if ($("#status-busy").hasClass("active")) {
+            $("#profile-img").addClass("busy");
+        } else if ($("#status-offline").hasClass("active")) {
+            $("#profile-img").addClass("offline");
+        } else {
+            $("#profile-img").removeClass();
+        };
+        
+        $("#status-options").removeClass("active");
+    });
+
+
+    

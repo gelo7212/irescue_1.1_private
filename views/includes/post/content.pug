@@ -1,0 +1,61 @@
+.news_modal
+    button.close_news.btn.btn-light(id = id) close
+    .row
+
+        .col-md-10.col-lg-8.px-4.news_content(style='height:99%')
+            .pct
+                #carouselExampleControls.carousel.slide(data-ride='carousel')
+                    .carousel-inner
+                        -var i = 0
+                        -console.log( link == null , link)
+                        if typeof link != 'undefined' &&  link != null
+                            each val in link
+
+                                if i == 0
+                                    -console.log(val)
+                                    .carousel-item.active
+                                        if val.FILETYPE == 'video/mp4'
+                                            video(controls='' autoplay='')
+                                                source(src='uploads/post_images/'+val.FILENAME, type='video/mp4')
+                                                source(src='uploads/post_images/'+val.FILENAME, type='video/ogg')
+                                                |   Your browser does not support the video tag.
+
+                                        else
+                                            img.d-block( src='uploads/post_images/'+val.FILENAME, alt='First slide')
+                                else
+                                    -console.log(val)
+                                    .carousel-item
+                                        if val.FILETYPE == 'video/mp4'
+                                            video(controls='' autoplay='')
+                                                source(src='uploads/post_images/'+val.FILENAME, type='video/mp4')
+                                                source(src='uploads/post_images/'+val.FILENAME, type='video/ogg')
+                                                |   Your browser does not support the video tag.
+                                        else
+                                            img.d-block( src='uploads/post_images/'+val.FILENAME, alt='First slide')
+                                -i++
+                        else
+                            .carousel-item.active
+                                img.d-block( src='images/no-image-icon-8.jpg' alt='First slide')
+                    a.carousel-control-prev(href='#carouselExampleControls' role='button' data-slide='prev')
+                        span.carousel-control-prev-icon(aria-hidden='true')
+                        span.sr-only Previous
+                    a.carousel-control-next(href='#carouselExampleControls' role='button' data-slide='next')
+                        span.carousel-control-next-icon(aria-hidden='true')
+                        span.sr-only Next
+        .col-md-2.col-lg-4.d-none.d-md-block.bg-light.sidebar
+            h1.mb-0 #{post_type}
+            if alerttype == 'yellow'
+                span.badge.badge-pill.badge-warning Warning
+            else if alerttype =='orange'
+                span.badge.badge-pill.badge-warning.orange Warning
+            else if alerttype =='red'
+                span.badge.badge-pill.badge-danger Danger
+            else    
+                span.badge.badge-pill.badge-info Info
+            .mb-1.text-muted
+            .news_body
+                p.card-text.mb-auto #{body}
+                ul.locations
+                    each location in locations
+                        li #{location.MUNICIPAL}
+

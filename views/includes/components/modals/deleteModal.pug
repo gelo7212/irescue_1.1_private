@@ -1,0 +1,56 @@
+.modal-header
+    h5#exampleModalCenterTitle.modal-title User Details
+    button.close(type='button', data-dismiss='modal', aria-label.modal_lbl='Close')
+    span(aria-hidden='true' style="font-color='white'") ×
+.modal-body
+    .col.p-4.d-flex.flex-column.position-static
+        h3
+            strong.d-inline-block.mb-2.text-primary#del_id #{user.Account_ID}
+        h3.mb-0 #{user.Account_NAME}
+        
+        -var type_id = user.Account_TYPE_ID, typename
+        -var AM
+        -var AB
+        -var AP
+        if type_id == 'CA'
+            -typename == 'Capitol Admin'
+        else if type_id == 'BH'
+            -typename = 'Barangay Hall'
+        else if type_id == 'MA'
+            -typename = 'Municipal Admin'
+        else if type_id == 'PS'
+            -typename = 'Police Station'
+        else if type_id == 'FS'
+            -typename = 'Fire Station'
+        else 
+            -typename = 'Ambulance'
+        .mb-1.text-muted #{user.Account_USERNAME}
+        .mb-1.text-muted #{user.Account_EMAIL}
+        .mb-1.text-muted #{typename}
+        if user.Account_Province == 'N/A'
+            -AP =''
+        else 
+            -AP = user.Account_Province
+        if user.Account_Municipal =='N/A'
+            -AM = ''
+        else 
+            -AM = user.Account_Municipal
+        if user.Account_Barangay == 'N/A'
+            -AB =''
+        else 
+            -AB = user.Account_Barangay
+       
+        p.mb-1.text-muted  #{AB} #{AM} #{AP}
+        if !user.Account_ISVERIFY
+            p.mb-1.text-muted  This account was not verify
+    style.
+        .modal_lbl ,p{
+            color:white;
+        }
+.modal-footer
+    button#closebtn.btn.btn-danger(type='button', data-dismiss='modal') Cancel
+    if user.Account_DISABLE
+        button#BanBtn.btn.btn-warning(type='button') Enable Account 
+    else
+        button#BanBtn.btn.btn-warning(type='button') Ban/Disable
+    button#DeleteBtn.btn.btn-primary(type='button') Delete

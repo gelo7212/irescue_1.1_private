@@ -1,0 +1,421 @@
+script(src='https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js')
+script(src='https://cdnjs.cloudflare.com/ajax/libs/jquery.form/3.51/jquery.form.min.js')
+
+link(rel='stylesheet', href='/stylesheets/previewMulti.css')
+link(href='stylesheets/select2.min.css', rel='stylesheet')
+script(src='javascripts/select2.js')
+.form-group#body_form
+    textarea#body.form-control.rounded-bottom-0(aria-label='With textarea')
+    .body_form       
+    
+.row.no-gutters
+    .compose-box-footer.rounded-top-0
+        .row
+            if Account_TYPE_ID == 'Super Admin'
+                .col-md-auto
+                    .form-group#formMun
+                        .input-group.mb-3
+                            .input-group-prepend
+                                .input-group-text
+                                    input#cb_all(type='checkbox', aria-label='Select all')
+                            select#Selectmunicipal.form-control.js-example-basic-single(name='municipal' ,data-live-search="true", multiple)
+                        .formMun
+            else if Account_TYPE_ID == 'CA'
+                .col-md-auto
+                    .form-group#formMun
+                        .input-group.mb-3
+                            .input-group-prepend
+                                .input-group-text
+                                    input#cb_all(type='checkbox', aria-label='Select all')
+                            select#Selectmunicipal.form-control.js-example-basic-single(name='municipal' ,data-live-search="true", multiple) 
+                        .formMun
+            .col-md-auto
+                    .form-group#alert_type_form
+                        select#Select_alert_type.form-control.js-example-basic-single(name='alert_level')
+                            option(value='none') -
+                            option(value='yellow') Alert
+                            option(value='orange') Prepared
+                            option(value='red') Take Action
+                        .alert_type_form
+            .col-md-auto
+                    .form-group#report_type_form
+                        select#Select_report_type.form-control.js-example-basic-single(name='post_type')
+                            option(value='Accident') Accident
+                            option(value='Dam Update') Dam Update
+                            option(value='Earthquake') Earthquake
+                            option(value='Fire') Fire Incident
+                            option(value='Flood') Flood Watch
+                            option(value='Rainfall') Rainfall Advisory
+                            option(value='Thunder Storm') Thunder Storm
+                            option(value='Typhoon') Typhoon
+                            option(value='Weather Forecast') Weather Forecast
+                            option(value='Other') Other
+                        .report_type_form
+        .col-md-auto
+            .form-group
+                input#other.hidden-textbox.form-control.form-control-sm(type='', value='', name='')
+    
+    
+    .custom-file()
+        input#customFile.custom-file-input(type='file', accept="video/*,  video/x-m4v, video/webm, video/x-ms-wmv, video/x-msvideo, video/3gpp, video/flv, video/x-flv, video/mp4, video/quicktime, video/mpeg, video/ogv,  .mkv, image/*, image/heic, image/heif",name='photos',aria-label="Add Photo or Video", multiple)
+        label.custom-file-label(for='customFile') Drag or Browse File
+        .preview-images-zone
+        #custom-file
+    .compose-box-footer.rounded-top-0(style="margin-top: 10px;")
+        .compose-toolbar(style="width: 100%;")
+            button.btn.btn-outline-primary#post(type='button',style="width: 100%;") Post
+            .progress.hidden
+                .progress-bar.progress-bar-striped.progress-bar-animated(role='progressbar', aria-valuenow='0', aria-valuemin='0', aria-valuemax='100', style='width: 0%')
+
+            
+style.
+    .invalid-feedback {
+        display:block!important
+    }
+    .custom-file-input ~ .custom-file-label::after {
+        content: "Drag or Browse";
+        display:none;
+    }
+    .custom-file-label{
+        border: 0;
+        border-radius: 0;
+        text-align-last: center;
+        border-bottom: 1px solid #ced4da;
+    }
+    .custom-file {
+        height:100%!important;
+        border: 1px solid #ced4da;
+    }
+    .simple-compose-box{
+        list-style: none;
+        margin: 0;
+        padding: 0 3px;
+        float: left;
+    }
+    .compose-box-footer{
+        list-style: none;
+        margin: 0;
+        padding: 0 3px;
+        float: left;
+    }
+    .compose-toolbar{
+        list-style: none;
+        margin: 0;
+        padding: 0 3px;
+        float: left;
+    }
+    .rounded-bottom-0 {
+        border-bottom-left-radius: 0 !important;
+        border-bottom-right-radius: 0 !important;
+        width: 100%;
+    }
+
+    .rounded-top-0 {
+        border-top-left-radius: 0 !important;
+        border-top-right-radius: 0 !important;
+        width: 100%;
+    }
+    .select2-results__options{
+        font-size:small;
+    }
+    .select2 {
+        font-size: small;
+    }
+
+    .hidden{
+        display:none!important
+    }
+script.
+    
+        var num = 4;
+        //-  $('#Selectmunicipal').multiselect({
+        //-   allSelectedText: 'All',
+        //-   maxHeight: 200,
+        //-   includeSelectAllOption: true
+        //- })
+        //- .multiselect('selectAll', false)
+        //- .multiselect('updateButtonText');
+        function isFileEmpty(){
+            const newDataLenght = Object.getOwnPropertyNames(newData).length;
+            console.log(newDataLenght); // 1
+            if(newDataLenght==0 ){
+                $('#customFile').val("")
+            }
+        }
+        $('#cb_all').change(function() {
+            if(this.checked) {
+                $('#Selectmunicipal option').prop('selected', true);
+            }else{
+                $('#Selectmunicipal option').prop('selected', false);
+            }
+            
+        });
+        $(document).on('click', '.image-cancel', function() {
+                let no = $(this).data('no');
+                let pic = 'file-'+$(this).data('pic');
+                
+                
+                $(".preview-image.preview-show-"+no).remove();
+                delete newData[pic]
+                isFileEmpty()
+            });       
+        var newData = {}
+        $('.custom-file').on('change','#customFile' , function(){ readImage() });
+        function hasFile(file){
+            return new Promise((resolve,reject)=>{
+                for(var d in newData){
+                    if(newData[d].hasOwnProperty(file)){
+                        
+                        return resolve({res:true,f:file})
+                    }else{
+                        return resolve({res:false,f:file})
+                        //formData.append('photos',newData[d],file.name)
+                    }
+                    
+                }
+            })
+        }
+        function appendpic(file){
+            var output = $(".preview-images-zone");
+            var newname = file.name.replace(".", "")
+            var myEle = document.getElementById(newname.replace(" ", ""));
+            if (myEle === null){
+                Reader(file).then(picFile=>{
+                    var html = ''
+                    if(file.type == 'video/mp4'){
+                    let blobURL = URL.createObjectURL(file);
+                        html =  '<div class="preview-image preview-show-' + num + '" id="' +newname.replace(" ", "") + '" style="width: auto!important;">' +
+                            '<div class="image-cancel" data-no="' + num + '" data-pic="' + newname.replace(" ", "")+ '">x</div>' +
+                            '<div class="image-zone"><video style ="height:100%" id="pro-img-' + num + '" autoplay>'+
+                                '<source src="' + blobURL + '" type ="video/mp4">'+
+                                '<source src="' + blobURL + '" type ="video/ogg"></video></div>' +
+                            '<div class="tools-edit-image"><a href="javascript:void(0)" data-no="' + num + '" class="btn btn-light btn-edit-image">edit</a></div>' +
+                            '</div>';
+                    }else{
+                        html =  '<div class="preview-image preview-show-' + num + '" id="' +newname.replace(" ", "") + '" >' +
+                            '<div class="image-cancel" data-no="' + num + '" data-pic="' + newname.replace(" ", "")+ '">x</div>' +
+                            '<div class="image-zone"><img id="pro-img-' + num + '" src="' + picFile + '"></div>' +
+                            '<div class="tools-edit-image"><a href="javascript:void(0)" data-no="' + num + '" class="btn btn-light btn-edit-image">edit</a></div>' +
+                            '</div>';
+                    }
+                
+                    output.append(html);
+                    num = num + 1;
+                })
+            }else{
+                console.log('Existing '+file.name.replace(".", ""))
+            }
+        }
+        function Reader(file){
+            return new Promise((resolve,reject)=>{
+                var picReader = new FileReader();
+                picReader.onload = function(e){
+                    var picFile = e.target
+                    return resolve(picFile.result)
+                }
+                picReader.readAsDataURL(file);
+                
+            }) 
+        }
+        function readImage() {
+            new Promise((resolve,reject)=>{
+                if (window.File && window.FileList && window.FileReader && window.Blob) {
+                    var files = event.target.files; //FileList object
+                    
+                    for (let i = 0; i < files.length; i++) {
+                        var file = files[i];
+                    
+                        //console.log('1st',' ',newname.replace(' ', ""))//1st
+                        console.log('2nd',' ',file)//1st
+                        //if (!file.type.match('image')) continue;
+                        if(jQuery.isEmptyObject(newData)){
+                            var newname = file.name.replace('.', "")
+                            newData['file-'+newname.replace(' ', "")] = file
+                            appendpic(file)
+                        }else{
+                        // console.log(file)
+                            hasFile(file).then(dta=>{
+                                console.log(dta)
+                                if(!dta.res){
+                                    var newname = dta.f.name.replace('.', "")
+                                    newData['file-'+newname.replace(' ', "")] = dta.f
+                                    appendpic(dta.f)
+                                }
+                            })
+                        }
+                        
+                    }
+                    $("#pro-image").val('');
+                } else {
+                    console.log('Browser not support');
+                }
+                isFileEmpty()
+            })
+            
+        }
+    
+        function formData_fn(){
+            return new Promise((resolve,reject)=>{
+                var formData = new FormData();
+                for(var a in newData){
+                    if(newData.hasOwnProperty(a)){
+                        console.log(newData[a])
+                        formData.append('photos',newData[a])
+                    }
+                }
+                var post_details = {
+                    'body':$('#body').val(),
+                    'location':JSON.stringify(
+                    $("#Selectmunicipal option:selected").map(function () {
+                        return $(this).text();
+                    }).get()),
+                    'alert':$('#Select_alert_type').val()
+                    
+                }
+                if($('#Select_report_type').val().toLowerCase() === "other"){
+                    post_details.post_type = $('#other').val()
+                }else{
+                    post_details.post_type = $( "#Select_report_type option:selected" ).text();
+                }
+                for(var a in post_details){
+                    formData.append(a,post_details[a])
+                }
+                return resolve(formData)
+            })
+        }
+        function displayPB(){
+            $('.p-c').find('.row').find('.compose-box-footer').find('.compose-toolbar').find('button').addClass('hidden')
+            $('.p-c').find('.row').find('.compose-box-footer').find('.compose-toolbar').find('.progress').removeClass('hidden')
+            
+        } 
+        $("#post").on('click',function(e){
+            formData_fn().then(data=>{
+                for (var value of data.values()) {
+                    console.log(value); 
+                }
+                $('.invalid-feedback').empty()
+                displayPB()
+                var xhr = new XMLHttpRequest();
+                xhr.open('post', '/post/c', true);
+                xhr.upload.onprogress = function(e) {
+                if (e.lengthComputable) {
+                    var percentage = (e.loaded / e.total) * 100;
+
+                    $('.p-c').find('.row').find('.compose-box-footer').find('.compose-toolbar').find('.progress').find('.progress-bar').css('width', percentage+'%').attr("aria-valuenow",percentage);
+                    console.log(percentage + "%");
+                }
+                };
+                xhr.onreadystatechange = function() {
+                    
+                    if (this.readyState == 4 && this.status == 200) {
+                        $.post('/post/post-box',function(data){
+                            $('.p-c').html(data)
+                        })
+                    }else{
+                        if(this.readyState == 4){
+                            var  ndata = JSON.parse(this.response)
+                            console.log(this );
+                            let d = ''
+                                if(ndata.param == 'body'){
+                                    d ='.body_form'
+                                }
+                                if(ndata.param == 'location'){
+                                    d ='.formMun'
+                                }
+                                if(ndata.param == 'alert'){
+                                    d ='.alert_type_form'
+                                }
+                                if(ndata.param == 'post_type'){
+                                    d ='.report_type_form'
+                                }
+                                if(ndata.param == 'Files'){
+                                    d ='#custom-file'
+                                }
+                                $(d).empty().append('<div class="invalid-feedback">'+ndata.msg+' </div>')
+                            $('.p-c').find('.row').find('.compose-box-footer').find('.compose-toolbar').find('button').removeClass('hidden')
+                            $('.p-c').find('.row').find('.compose-box-footer').find('.compose-toolbar').find('.progress').addClass('hidden')
+                     }
+                    }
+                };
+                xhr.send(data);
+                
+            })
+            
+        })
+            $('.panel-toggle').on('click', function(event){
+                event.preventDefault();
+                var hpanel = $(event.target).closest('div.panel');
+                var icon = $(event.target).closest('i');
+                var body = hpanel.find('div.panel-body');
+                var footer = hpanel.find('div.panel-footer');
+                body.slideToggle(300);
+                footer.slideToggle(200);
+
+                // Toggle icon from up to down
+                icon.toggleClass('fa-chevron-up').toggleClass('fa-chevron-down');
+                hpanel.toggleClass('').toggleClass('panel-collapse');
+                setTimeout(function () {
+                    hpanel.resize();
+                    hpanel.find('[id^=map-]').resize();
+                }, 50);
+            });
+        $('#Select_report_type').on('change', function() {
+            var changed = this,
+                check = $(changed).val().toLowerCase() === "other";
+
+            $('.hidden-textbox').toggle(check).prop('required', check);
+        }).change();
+        $(document).ready(function() {
+            $('.js-example-basic-single').select2();
+        });
+
+if Account_TYPE_ID == 'Super Admin' || Account_TYPE_ID == 'CA'
+    script.
+        var MunicipalByCategory = {
+            BULACAN: ["Angat","Balagtas","Baliuag","Bocaue","Bulakan","Bustos","Calumpit","DRT","Guiguinto","Hagonoy","Malolos","Marilao","Meycauayan","Norzagaray","Obando","Pandi","Paombong","Plaridel","Pulilan","San Ildefonso","San Jose Del Monte","San Miguel","San Miguel","San Rafael","Santa Maria"],
+            Bulacan: ["Angat","Balagtas","Baliuag","Bocaue","Bulakan","Bustos","Calumpit","DRT","Guiguinto","Hagonoy","Malolos","Marilao","Meycauayan","Norzagaray","Obando","Pandi","Paombong","Plaridel","Pulilan","San Ildefonso","San Jose Del Monte","San Miguel","San Miguel","San Rafael","Santa Maria"]
+        }
+        String.prototype.replaceAll = function(search, replacement) {
+            var target = this;
+            return target.replace(new RegExp(search, 'g'), replacement);
+        };
+         function municipal(value){
+            if (value.length == 0) {
+                    document.getElementById("Selectmunicipal").innerHTML = "<option></option>";
+                }
+            else{
+                var catOptions = "";
+                for (categoryId in MunicipalByCategory[value]) {
+                    var lo = MunicipalByCategory[value][categoryId]
+                    var rep = lo.replaceAll(" ","_")
+                    catOptions += "<option value="+rep+">" + MunicipalByCategory[value][categoryId] + "</option>";
+                }
+                document.getElementById("Selectmunicipal").innerHTML = catOptions;
+            }
+        }
+        var arr =[]
+        for(var i = 0; i <= $('#tableOFThis tr').length-1;i++){
+            arr.push($("#tableOFThis").find('tr').eq(i).find('td').eq(1).html())
+
+        }
+        
+        isFileEmpty()
+if Account_TYPE_ID == 'Super Admin'
+    script.
+        municipal('#{Account_Province}')
+if Account_TYPE_ID == 'CA'
+    script.
+        municipal('#{Account_Province}')
+if Account_TYPE_ID =='MA'
+    script.
+        //municipal('#{Account_Province}')
+style.
+    textarea{
+        height: 18pc!important;
+        resize: none;
+    }
+ script.
+    (function(){
+        $( ".preview-images-zone" ).sortable();
+        isFileEmpty()
+    })()   
